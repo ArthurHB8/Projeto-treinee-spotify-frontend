@@ -1,4 +1,3 @@
-// import "./SongPanel.css";
 import SobreArtista from "./SobreArtista";
 import Creditos from "./Creditos";
 import Turne from "./Turne";
