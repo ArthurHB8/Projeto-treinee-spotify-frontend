@@ -1,6 +1,7 @@
-import SongPanel from "./components/SongPanel"; // Ajuste o caminho se sua pasta chamar algo diferente
+import SongPanel from "./components/SongPanel";
 import albumCover from "./assets/album-cover.png";
 import Library from "./components/Library";
+import Main from "./components/Main";
 
 export default function App() {
   return (
@@ -11,10 +12,11 @@ export default function App() {
         padding: "20px",
         backgroundColor: "#000",
         minHeight: "100vh",
-        spaceBetween: "20px",
+        gap: "20px",
       }}
     >
       <Library />
+      <Main />
       <SongPanel titulo="Never Let Go" artista="LINGSHOT" capa={albumCover} />
     </div>
   );

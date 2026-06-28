@@ -1,4 +1,11 @@
-export default function LibraryItem({ capa, titulo, artista, tipo }) {
+import type { LibraryItemProps } from "../types";
+
+export default function LibraryItem({
+  capa,
+  titulo,
+  artista,
+  tipo,
+}: LibraryItemProps) {
   return (
     <div className="flex gap-2 items-center cursor-pointer hover:bg-[#2A2A2A] p-1 rounded">
       <img

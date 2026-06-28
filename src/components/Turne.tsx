@@ -1,5 +1,7 @@
+import type { EventoTurne } from "../types";
+
 export default function Turne() {
-  const eventosMock = [
+  const eventosMock: EventoTurne[] = [
     {
       id: 1,
       mes: "Mai.",
@@ -39,7 +41,7 @@ export default function Turne() {
   ];
 
   if (eventosMock.length === 0) {
-    return null; // Não renderiza nada se não houver eventos
+    return null;
   }
 
   return (
@@ -52,7 +54,6 @@ export default function Turne() {
           className="flex gap-3 items-center hover:bg-[#3E3E3E] p-2 rounded transition-colors"
         >
           <div className="flex gap-3 items-center">
-            {/* w-42px e h-42px */}
             <div className="flex flex-col items-center justify-center rounded w-10.5 h-10.5 bg-[#121212]">
               <p className="text-[8px] font-bold">{evento.mes}</p>
               <p className="text-base font-bold">{evento.dia}</p>

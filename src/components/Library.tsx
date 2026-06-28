@@ -11,8 +11,13 @@ import playlist1 from "../assets/playlist1.png";
 import playlist4 from "../assets/playlist4.png";
 
 import { useState } from "react";
+import type {
+  BotaoFiltroProps,
+  FiltroBiblioteca,
+  LibraryItemTipo,
+} from "../types";
 
-const BotaoFiltro = ({ texto, ativo, onClick }) => {
+const BotaoFiltro = ({ texto, ativo, onClick }: BotaoFiltroProps) => {
   return (
     <button
       className={`px-[15.5px] py-2.5 text-[10px] rounded-full cursor-pointer transition-colors ${
@@ -27,8 +32,16 @@ const BotaoFiltro = ({ texto, ativo, onClick }) => {
   );
 };
 
+type BibliotecaItem = {
+  id: number;
+  tipo: LibraryItemTipo;
+  titulo: string;
+  artista: string;
+  capa: string;
+};
+
 export default function Library() {
-  const bibliotecaMock = [
+  const bibliotecaMock: BibliotecaItem[] = [
     {
       id: 1,
       tipo: "Playlist",
@@ -136,7 +149,7 @@ export default function Library() {
     },
   ];
 
-  const [filtroAtivo, setFiltroAtivo] = useState("Tudo");
+  const [filtroAtivo, setFiltroAtivo] = useState<FiltroBiblioteca>("Tudo");
 
   const [busca, setBusca] = useState("");
 
@@ -148,7 +161,7 @@ export default function Library() {
   });
 
   return (
-    <div className="text-white bg-[#121212] rounded-lg p-3 w-[312px]">
+    <div className="text-white bg-[#121212] rounded-lg p-3 w-[312px] min-w-[312px] shrink-0 max-h-[927px] overflow-y-auto">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-xs font-bold">Sua biblioteca</h2>
         <button className="px-3 py-1.5 text-[10px] font-bold border border-[#7c7c7c] rounded-2xl cursor-pointer">
