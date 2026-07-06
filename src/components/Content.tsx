@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import playlist3 from "../assets/playlist3.png";
-import playlist4bigger from "../assets/playlist4bigger.png";
-import aespaArtista2 from "../assets/aespaArtist2.png";
+import playlist4bigger from "../assets/playlist4Content.png";
+import aespaArtista2 from "../assets/aespaContent.png";
 import type {
   BotaoFiltroProps,
   CardAcessoRapidoProps,
