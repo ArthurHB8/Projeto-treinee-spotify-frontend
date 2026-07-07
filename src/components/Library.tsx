@@ -1,21 +1,11 @@
 import LibraryItem from "./LibraryItem";
 
 import searchIcon from "../assets/search-icon.svg";
-import lemonadeCapa from "../assets/lemonade.png";
-import likedSongs from "../assets/likedSongs.png";
-import aespaArtista from "../assets/aespaArtist.png";
-import kendrickArtista from "../assets/kendrickArtist.png";
-import playlist3 from "../assets/playlist3.png";
-import playlist2 from "../assets/playlist2.png";
-import playlist1 from "../assets/playlist1.png";
-import playlist4 from "../assets/playlist4.png";
 
-import { useState } from "react";
-import type {
-  BotaoFiltroProps,
-  FiltroBiblioteca,
-  LibraryItemTipo,
-} from "../types";
+import { useEffect, useState } from "react";
+import { getUserPlaylists, getUserRecentAlbums, getUserRecentArtists } from "../api/user";
+import { ordenarItensBiblioteca } from "../utils/bibliotecaOrdenacao";
+import type { BibliotecaItem, BotaoFiltroProps, FiltroBiblioteca } from "../types";
 
 const BotaoFiltro = ({ texto, ativo, onClick }: BotaoFiltroProps) => {
   return (
@@ -32,128 +22,54 @@ const BotaoFiltro = ({ texto, ativo, onClick }: BotaoFiltroProps) => {
   );
 };
 
-type BibliotecaItem = {
-  id: number;
-  tipo: LibraryItemTipo;
-  titulo: string;
-  artista: string;
-  capa: string;
-};
-
 export default function Library() {
-  const bibliotecaMock: BibliotecaItem[] = [
-    {
-      id: 1,
-      tipo: "Playlist",
-      titulo: "Músicas curtidas",
-      artista: "Arthur Braz",
-      capa: likedSongs,
-    },
-    {
-      id: 2,
-      tipo: "artista",
-      titulo: "aespa",
-      artista: "aespa",
-      capa: aespaArtista,
-    },
-    {
-      id: 3,
-      tipo: "Álbum",
-      titulo: "LEMONADE - The 2nd Album",
-      artista: "aespa",
-      capa: lemonadeCapa,
-    },
-    {
-      id: 4,
-      tipo: "Playlist",
-      titulo: "follow the beat (or die trying)",
-      artista: "Arthur Braz",
-      capa: playlist3,
-    },
-    {
-      id: 5,
-      tipo: "Playlist",
-      titulo: "foreign",
-      artista: "Arthur Braz",
-      capa: playlist2,
-    },
-    {
-      id: 6,
-      tipo: "Playlist",
-      titulo: "you know",
-      artista: "Arthur Braz",
-      capa: playlist4,
-    },
-    {
-      id: 7,
-      tipo: "artista",
-      titulo: "Kendrick Lamar",
-      artista: "Kendrick Lamar",
-      capa: kendrickArtista,
-    },
-    {
-      id: 8,
-      tipo: "Playlist",
-      titulo: "flow state",
-      artista: "Arthur Braz",
-      capa: playlist1,
-    },
-    {
-      id: 9,
-      tipo: "Álbum",
-      titulo: "LEMONADE - The 2nd Album",
-      artista: "aespa",
-      capa: lemonadeCapa,
-    },
-    {
-      id: 10,
-      tipo: "Playlist",
-      titulo: "follow the beat (or die trying)",
-      artista: "Arthur Braz",
-      capa: playlist3,
-    },
-    {
-      id: 11,
-      tipo: "Playlist",
-      titulo: "foreign",
-      artista: "Arthur Braz",
-      capa: playlist2,
-    },
-    {
-      id: 12,
-      tipo: "Playlist",
-      titulo: "you know",
-      artista: "Arthur Braz",
-      capa: playlist4,
-    },
-    {
-      id: 13,
-      tipo: "artista",
-      titulo: "Kendrick Lamar",
-      artista: "Kendrick Lamar",
-      capa: kendrickArtista,
-    },
-    {
-      id: 14,
-      tipo: "Playlist",
-      titulo: "flow state",
-      artista: "Arthur Braz",
-      capa: playlist1,
-    },
-    {
-      id: 15,
-      tipo: "Álbum",
-      titulo: "LEMONADE - The 2nd Album",
-      artista: "aespa",
-      capa: lemonadeCapa,
-    },
-  ];
+  const [itens, setItens] = useState<BibliotecaItem[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
 
   const [filtroAtivo, setFiltroAtivo] = useState<FiltroBiblioteca>("Tudo");
-
   const [busca, setBusca] = useState("");
 
-  const itensFiltrados = bibliotecaMock.filter((item) => {
+  useEffect(() => {
+    setCarregando(true);
+    setErro(null);
+
+    Promise.all([getUserPlaylists(), getUserRecentArtists(), getUserRecentAlbums()])
+      .then(([playlists, artistas, albuns]) => {
+        const itensPlaylists: BibliotecaItem[] = playlists.map((playlist) => ({
+          id: playlist.id,
+          tipo: "Playlist",
+          titulo: playlist.name,
+          artista: "Arthur Braz",
+          pinnedAt: null,
+          lastUsedAt: playlist.updatedAt ?? playlist.createdAt,
+        }));
+
+        const itensArtistas: BibliotecaItem[] = artistas.map((artista) => ({
+          id: artista.id,
+          tipo: "artista",
+          titulo: artista.name,
+          artista: artista.name,
+          pinnedAt: null,
+          lastUsedAt: artista.updatedAt ?? artista.createdAt,
+        }));
+
+        const itensAlbuns: BibliotecaItem[] = albuns.map((album) => ({
+          id: album.id,
+          tipo: "Álbum",
+          titulo: album.title,
+          artista: album.artistName,
+          pinnedAt: null,
+          lastUsedAt: album.updatedAt ?? album.createdAt,
+        }));
+
+        setItens([...itensPlaylists, ...itensArtistas, ...itensAlbuns]);
+      })
+      .catch(() => setErro("Não foi possível carregar sua biblioteca."))
+      .finally(() => setCarregando(false));
+  }, []);
+
+  const itensFiltrados = ordenarItensBiblioteca(itens).filter((item) => {
     return (
       (filtroAtivo === "Tudo" || item.tipo === filtroAtivo) &&
       item.titulo.toLowerCase().includes(busca.toLowerCase())
@@ -201,23 +117,32 @@ export default function Library() {
         />
       </div>
 
-      {itensFiltrados.length === 0 && (
+      {carregando && (
+        <p className="text-center text-[10px] text-[#B3B3B3] mt-4">Carregando...</p>
+      )}
+
+      {!carregando && erro && (
+        <p className="text-center text-[10px] text-red-400 mt-4">{erro}</p>
+      )}
+
+      {!carregando && !erro && itensFiltrados.length === 0 && (
         <p className="text-center text-[10px] text-[#B3B3B3] mt-4">
           Nenhum item encontrado
         </p>
       )}
 
-      <div className="mt-3 flex flex-col gap-2">
-        {itensFiltrados.map((item) => (
-          <LibraryItem
-            key={item.id}
-            capa={item.capa}
-            titulo={item.titulo}
-            artista={item.artista}
-            tipo={item.tipo}
-          />
-        ))}
-      </div>
+      {!carregando && !erro && (
+        <div className="mt-3 flex flex-col gap-2">
+          {itensFiltrados.map((item) => (
+            <LibraryItem
+              key={item.id}
+              titulo={item.titulo}
+              artista={item.artista}
+              tipo={item.tipo}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
