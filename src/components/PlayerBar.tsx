@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { resolveImageUrl } from "../api/client";
 import { usePlayer } from "../context/PlayerContext";
@@ -47,12 +48,18 @@ export default function PlayerBar() {
               />
             )}
             <div className="min-w-0">
-              <p className="text-sm font-medium truncate">
+              <Link
+                to={`/album/${faixaAtual.musica.albumId}`}
+                className="text-sm font-medium truncate block no-underline text-inherit hover:underline"
+              >
                 {faixaAtual.musica.title}
-              </p>
-              <p className="text-xs text-texto-secundario truncate">
+              </Link>
+              <Link
+                to={`/artist/${faixaAtual.musica.artistId}`}
+                className="text-xs text-texto-secundario truncate block no-underline hover:underline"
+              >
                 {faixaAtual.nomeArtista}
-              </p>
+              </Link>
             </div>
           </>
         )}
