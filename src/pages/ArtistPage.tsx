@@ -7,11 +7,14 @@ import {
   getPopularMusicsByArtistId,
 } from "../api/artist";
 import { resolveImageUrl } from "../api/client";
+import { usePlayer } from "../context/PlayerContext";
+import MenuFaixa from "../components/MenuFaixa";
 import verifiedIcon from "../assets/icons/verifiedIcon.svg";
 import inLibraryIcon from "../assets/icons/inLibraryIcon.svg";
 import playIcon from "../assets/icons/playIcon.svg";
 import pauseIcon from "../assets/icons/pauseIcon.svg";
 import type { Album, Artist, Music } from "../api/types";
+import type { FaixaFila } from "../types";
 
 const formatarOuvintes = (n: number) =>
   new Intl.NumberFormat("pt-BR").format(n);
@@ -24,6 +27,10 @@ const formatarDuracao = (segundos: number) => {
 
 export default function ArtistPage() {
   const { id } = useParams<{ id: string }>();
+  const { tocarFaixa } = usePlayer();
+  const [menuFaixa, setMenuFaixa] = useState<{ musica: Music; x: number; y: number } | null>(
+    null,
+  );
 
   const [artista, setArtista] = useState<Artist | null>(null);
   const [albuns, setAlbuns] = useState<Album[]>([]);
@@ -66,8 +73,14 @@ export default function ArtistPage() {
 
   const capaArtista = resolveImageUrl(artista.imageUrl);
 
+  const filaPopulares: FaixaFila[] = musicasPopulares.map((musica) => ({
+    musica,
+    capa: capaPorMusica.get(musica.id) ?? null,
+    nomeArtista: artista.name,
+  }));
+
   return (
-    <div className="text-white bg-[#121212] rounded-lg flex-1 min-w-0 max-h-[927px] overflow-y-auto">
+    <div className="text-white bg-[#121212] rounded-lg flex-1 min-w-0 max-h-195 overflow-y-auto pb-[88px]">
       <div className="relative h-[380px] flex items-end p-6 bg-gradient-to-b from-[#5f5f5f] to-[#121212]">
         {capaArtista && (
           <img
@@ -76,7 +89,7 @@ export default function ArtistPage() {
             className="absolute inset-0 w-full h-full object-cover"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-black/10 to-transparent" />
+        <div className="absolute inset-0" />
         <div className="relative z-10">
           <h1 className="text-[64px] font-bold leading-none mb-4">
             {artista.name}
@@ -100,7 +113,7 @@ export default function ArtistPage() {
           <img
             src={tocando ? pauseIcon : playIcon}
             alt=""
-            className="w-[11.5px] h-[13.5px]"
+            className="w-[11.5px] h-[13.5px] invert"
           />
         </button>
         <button className="border border-[#7c7c7c] rounded-full px-3 py-1.5 text-xs font-bold cursor-pointer hover:border-white">
@@ -119,6 +132,11 @@ export default function ArtistPage() {
             return (
               <div
                 key={musica.id}
+                onClick={() => tocarFaixa(filaPopulares, musica.id)}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  setMenuFaixa({ musica, x: e.clientX, y: e.clientY });
+                }}
                 className="grid grid-cols-[24px_1fr_auto] items-center gap-2.5 px-2 py-2 rounded-sm hover:bg-white/10 cursor-pointer"
               >
                 <span className="text-sm text-texto-secundario text-center">
@@ -148,7 +166,7 @@ export default function ArtistPage() {
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-texto-secundario">
+                <div className="flex items-center gap-2.5 text-xs text-texto-secundario">
                   <span>{formatarOuvintes(musica.timesListen)}</span>
                   {musica.playlistsId.length > 0 && (
                     <img
@@ -204,6 +222,24 @@ export default function ArtistPage() {
           })}
         </div>
       </section>
+
+      {artista.about && (
+        <section className="px-6 pb-8">
+          <h2 className="text-[16px] font-bold mb-4">Sobre</h2>
+          <p className="text-sm text-texto-secundario max-w-[720px]">
+            {artista.about}
+          </p>
+        </section>
+      )}
+
+      {menuFaixa && (
+        <MenuFaixa
+          musica={menuFaixa.musica}
+          x={menuFaixa.x}
+          y={menuFaixa.y}
+          onFechar={() => setMenuFaixa(null)}
+        />
+      )}
     </div>
   );
 }

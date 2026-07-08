@@ -1,7 +1,15 @@
+import type { Music } from "../api/types";
+
 export type BotaoFiltroProps = {
   texto: string;
   ativo: boolean;
   onClick: () => void;
+};
+
+export type FaixaFila = {
+  musica: Music;
+  capa: string | null;
+  nomeArtista: string;
 };
 
 export type LibraryItemTipo = "Playlist" | "artista" | "Álbum";
@@ -31,19 +39,23 @@ export type SongPanelProps = {
 };
 
 export type CardAcessoRapidoProps = {
-  capa: string;
+  id: string;
+  tipo: "Playlist" | "Álbum";
+  capa: string | null;
   titulo: string;
   tocando?: boolean;
 };
 
 export type CardPlaylistProps = {
-  capa: string;
+  id: string;
+  capa: string | null;
   titulo: string;
   artista: string;
 };
 
 export type CardArtistaProps = {
-  capa: string;
+  id: string;
+  capa: string | null;
   nome: string;
 };
 
