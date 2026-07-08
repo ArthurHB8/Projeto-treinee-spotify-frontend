@@ -41,6 +41,7 @@ export default function Library() {
           tipo: "Playlist",
           titulo: playlist.name,
           artista: "Arthur Braz",
+          imageUrl: playlist.imageUrl,
           pinnedAt: null,
           lastUsedAt: playlist.updatedAt ?? playlist.createdAt,
         }));
@@ -50,6 +51,7 @@ export default function Library() {
           tipo: "artista",
           titulo: artista.name,
           artista: artista.name,
+          imageUrl: artista.imageUrl,
           pinnedAt: null,
           lastUsedAt: artista.updatedAt ?? artista.createdAt,
         }));
@@ -59,6 +61,7 @@ export default function Library() {
           tipo: "Álbum",
           titulo: album.title,
           artista: album.artistName,
+          imageUrl: album.imageUrl,
           pinnedAt: null,
           lastUsedAt: album.updatedAt ?? album.createdAt,
         }));
@@ -136,9 +139,11 @@ export default function Library() {
           {itensFiltrados.map((item) => (
             <LibraryItem
               key={item.id}
+              id={item.id}
               titulo={item.titulo}
               artista={item.artista}
               tipo={item.tipo}
+              imageUrl={item.imageUrl}
             />
           ))}
         </div>

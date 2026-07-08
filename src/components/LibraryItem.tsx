@@ -1,21 +1,41 @@
+import { Link } from "react-router-dom";
+
 import type { LibraryItemProps } from "../types";
 
-export default function LibraryItem({ titulo, artista, tipo }: LibraryItemProps) {
+const rotaPorTipo: Record<LibraryItemProps["tipo"], string> = {
+  Playlist: "/playlist",
+  Álbum: "/album",
+  artista: "/artist",
+};
+
+export default function LibraryItem({ id, titulo, artista, tipo, imageUrl }: LibraryItemProps) {
+  const arredondado = tipo === "artista" ? "rounded-full" : "rounded-xs";
+
   return (
-    <div className="flex gap-2 items-center cursor-pointer hover:bg-[#2A2A2A] p-1 rounded">
-      <div
-        className={`w-10 h-10 shrink-0 flex items-center justify-center bg-[#2a2a2a] text-white text-sm font-bold
-            ${tipo === "artista" ? "rounded-full" : "rounded-xs"}`}
-        aria-hidden="true"
-      >
-        {titulo.charAt(0).toUpperCase()}
-      </div>
+    <Link
+      to={`${rotaPorTipo[tipo]}/${id}`}
+      className="flex gap-2 items-center cursor-pointer hover:bg-[#2A2A2A] p-1 rounded no-underline text-inherit"
+    >
+      {imageUrl ? (
+        <img
+          src={`${import.meta.env.VITE_API_BASE_URL}${imageUrl}`}
+          alt={titulo}
+          className={`w-10 h-10 shrink-0 object-cover ${arredondado}`}
+        />
+      ) : (
+        <div
+          className={`w-10 h-10 shrink-0 flex items-center justify-center bg-[#2a2a2a] text-white text-sm font-bold ${arredondado}`}
+          aria-hidden="true"
+        >
+          {titulo.charAt(0).toUpperCase()}
+        </div>
+      )}
       <div>
         <p className="text-[10px] font-bold">{titulo}</p>
         <p className="text-[10px] text-[#B3B3B3]">
           {tipo === "artista" ? "Artista" : `${tipo} • ${artista}`}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }
