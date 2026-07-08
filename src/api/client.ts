@@ -1,5 +1,9 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+export function resolveImageUrl(imageUrl: string | null): string | null {
+  return imageUrl ? `${BASE_URL}${imageUrl}` : null;
+}
+
 export class ApiError extends Error {
   constructor(
     public status: number,
