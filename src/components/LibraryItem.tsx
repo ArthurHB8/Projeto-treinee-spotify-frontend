@@ -9,7 +9,13 @@ const rotaPorTipo: Record<LibraryItemProps["tipo"], string> = {
   artista: "/artist",
 };
 
-export default function LibraryItem({ id, titulo, artista, tipo, imageUrl }: LibraryItemProps) {
+export default function LibraryItem({
+  id,
+  titulo,
+  artista,
+  tipo,
+  imageUrl,
+}: LibraryItemProps) {
   const arredondado = tipo === "artista" ? "rounded-full" : "rounded-xs";
 
   return (

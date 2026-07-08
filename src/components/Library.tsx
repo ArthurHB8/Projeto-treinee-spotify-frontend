@@ -1,11 +1,21 @@
 import LibraryItem from "./LibraryItem";
+import CriarPlaylistModal from "./CriarPlaylistModal";
 
 import searchIcon from "../assets/icons/searchIcon.svg";
 
 import { useEffect, useState } from "react";
-import { getUserPlaylists, getUserRecentAlbums, getUserRecentArtists } from "../api/user";
+import { useNavigate } from "react-router-dom";
+import {
+  getUserPlaylists,
+  getUserRecentAlbums,
+  getUserRecentArtists,
+} from "../api/user";
 import { ordenarItensBiblioteca } from "../utils/bibliotecaOrdenacao";
-import type { BibliotecaItem, BotaoFiltroProps, FiltroBiblioteca } from "../types";
+import type {
+  BibliotecaItem,
+  BotaoFiltroProps,
+  FiltroBiblioteca,
+} from "../types";
 
 const BotaoFiltro = ({ texto, ativo, onClick }: BotaoFiltroProps) => {
   return (
@@ -23,18 +33,25 @@ const BotaoFiltro = ({ texto, ativo, onClick }: BotaoFiltroProps) => {
 };
 
 export default function Library() {
+  const navigate = useNavigate();
+
   const [itens, setItens] = useState<BibliotecaItem[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [criandoPlaylist, setCriandoPlaylist] = useState(false);
 
   const [filtroAtivo, setFiltroAtivo] = useState<FiltroBiblioteca>("Tudo");
   const [busca, setBusca] = useState("");
 
-  useEffect(() => {
+  const carregarBiblioteca = () => {
     setCarregando(true);
     setErro(null);
 
-    Promise.all([getUserPlaylists(), getUserRecentArtists(), getUserRecentAlbums()])
+    Promise.all([
+      getUserPlaylists(),
+      getUserRecentArtists(),
+      getUserRecentAlbums(),
+    ])
       .then(([playlists, artistas, albuns]) => {
         const itensPlaylists: BibliotecaItem[] = playlists.map((playlist) => ({
           id: playlist.id,
@@ -70,7 +87,9 @@ export default function Library() {
       })
       .catch(() => setErro("Não foi possível carregar sua biblioteca."))
       .finally(() => setCarregando(false));
-  }, []);
+  };
+
+  useEffect(carregarBiblioteca, []);
 
   const itensFiltrados = ordenarItensBiblioteca(itens).filter((item) => {
     return (
@@ -80,10 +99,13 @@ export default function Library() {
   });
 
   return (
-    <div className="text-white bg-[#121212] rounded-lg p-3 w-[312px] min-w-[312px] shrink-0 max-h-[927px] overflow-y-auto">
+    <div className="text-white bg-[#121212] rounded-lg p-3 pb-[88px] w-78 min-w-78 shrink-0 max-h-195 overflow-y-auto">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-xs font-bold">Sua biblioteca</h2>
-        <button className="px-3 py-1.5 text-[10px] font-bold border border-[#7c7c7c] rounded-2xl cursor-pointer">
+        <button
+          className="px-3 py-1.5 text-[10px] font-bold border border-[#7c7c7c] rounded-2xl cursor-pointer"
+          onClick={() => setCriandoPlaylist(true)}
+        >
           Criar playlist
         </button>
       </div>
@@ -121,7 +143,9 @@ export default function Library() {
       </div>
 
       {carregando && (
-        <p className="text-center text-[10px] text-[#B3B3B3] mt-4">Carregando...</p>
+        <p className="text-center text-[10px] text-[#B3B3B3] mt-4">
+          Carregando...
+        </p>
       )}
 
       {!carregando && erro && (
@@ -147,6 +171,17 @@ export default function Library() {
             />
           ))}
         </div>
+      )}
+
+      {criandoPlaylist && (
+        <CriarPlaylistModal
+          onFechar={() => setCriandoPlaylist(false)}
+          onCriada={(playlist) => {
+            setCriandoPlaylist(false);
+            carregarBiblioteca();
+            navigate(`/playlist/${playlist.id}`);
+          }}
+        />
       )}
     </div>
   );
