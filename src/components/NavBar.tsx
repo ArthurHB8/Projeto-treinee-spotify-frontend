@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import spotifyLogo from "../assets/spotifyIcon.svg";
 import searchIcon from "../assets/search-icon.svg";
 import downloadIcon from "../assets/downloadIcon.svg";
@@ -14,9 +16,12 @@ export default function NavBar() {
 
       {/* Search Links */}
       <div className="flex items-center gap-1">
-        <div className="rounded-full bg-fundo-cards w-9 h-9 flex items-center justify-center">
+        <Link
+          to="/"
+          className="rounded-full bg-fundo-cards w-9 h-9 flex items-center justify-center"
+        >
           <img src={homeIcon} alt="Home" />
-        </div>
+        </Link>
         <div className="flex bg-fundo-cards rounded-2xl px-2 py-1 h-9 gap-1 items-center w-[355px]">
           <img src={searchIcon} alt="Search" className="w-2.5 h-2.5" />
           <input

@@ -7,9 +7,11 @@ export type BotaoFiltroProps = {
 export type LibraryItemTipo = "Playlist" | "artista" | "Álbum";
 
 export type LibraryItemProps = {
+  id: string;
   titulo: string;
   artista: string;
   tipo: LibraryItemTipo;
+  imageUrl: string | null;
 };
 
 export type BibliotecaItem = {
@@ -17,6 +19,7 @@ export type BibliotecaItem = {
   tipo: LibraryItemTipo;
   titulo: string;
   artista: string;
+  imageUrl: string | null;
   pinnedAt: string | null;
   lastUsedAt: string;
 };
