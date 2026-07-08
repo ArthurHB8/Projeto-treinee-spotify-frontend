@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+import { resolveImageUrl } from "../api/client";
 import type { LibraryItemProps } from "../types";
 
 const rotaPorTipo: Record<LibraryItemProps["tipo"], string> = {
@@ -18,7 +19,7 @@ export default function LibraryItem({ id, titulo, artista, tipo, imageUrl }: Lib
     >
       {imageUrl ? (
         <img
-          src={`${import.meta.env.VITE_API_BASE_URL}${imageUrl}`}
+          src={resolveImageUrl(imageUrl)!}
           alt={titulo}
           className={`w-10 h-10 shrink-0 object-cover ${arredondado}`}
         />

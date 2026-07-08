@@ -1,6 +1,6 @@
 import LibraryItem from "./LibraryItem";
 
-import searchIcon from "../assets/search-icon.svg";
+import searchIcon from "../assets/icons/searchIcon.svg";
 
 import { useEffect, useState } from "react";
 import { getUserPlaylists, getUserRecentAlbums, getUserRecentArtists } from "../api/user";

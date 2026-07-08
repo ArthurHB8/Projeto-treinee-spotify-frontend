@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 
-import spotifyLogo from "../assets/spotifyIcon.svg";
-import searchIcon from "../assets/search-icon.svg";
-import downloadIcon from "../assets/downloadIcon.svg";
-import notificationIcon from "../assets/notificationIcon.svg";
-import homeIcon from "../assets/homeIcon.svg";
+import spotifyLogo from "../assets/icons/spotifyIcon.svg";
+import searchIcon from "../assets/icons/searchIcon.svg";
+import downloadIcon from "../assets/icons/downloadIcon.svg";
+import notificationIcon from "../assets/icons/notificationIcon.svg";
+import homeIcon from "../assets/icons/homeIcon.svg";
 import profilePicture from "../assets/profilePicture.jpg";
 
 export default function NavBar() {
