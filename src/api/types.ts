@@ -17,6 +17,7 @@ export type Artist = {
   name: string;
   listeners: number;
   about: string;
+  imageUrl: string | null;
   createdAt: string;
   updatedAt: string | null;
 };
@@ -28,6 +29,7 @@ export type Album = {
   artistId: string;
   artistName: string;
   musics: Music[];
+  imageUrl: string | null;
   createdAt: string;
   updatedAt: string | null;
 };
@@ -41,6 +43,7 @@ export type Playlist = {
   musicQtd: number;
   duration: number;
   musics: Music[];
+  imageUrl: string | null;
   createdAt: string;
   updatedAt: string | null;
 };

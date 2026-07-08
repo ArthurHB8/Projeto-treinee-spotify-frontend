@@ -9,6 +9,9 @@ import type {
 export const getPlaylistById = (playlistId: string) =>
   api.get<Playlist>(`/playlist/${playlistId}`);
 
+export const setPlaylistImage = (playlistId: string, file: File) =>
+  api.upload<Playlist>(`/playlist/${playlistId}/image`, file);
+
 export const createPlaylist = (payload: CreatePlaylistPayload) =>
   api.post<PlaylistNoMusic>("/playlist", payload);
 
