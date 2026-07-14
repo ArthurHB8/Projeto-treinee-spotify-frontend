@@ -9,6 +9,7 @@ import {
 import { resolveImageUrl } from "../api/client";
 import { usePlayer } from "../context/PlayerContext";
 import MenuFaixa from "../components/MenuFaixa";
+import EstadoPagina from "../components/EstadoPagina";
 import verifiedIcon from "../assets/icons/verifiedIcon.svg";
 import inLibraryIcon from "../assets/icons/inLibraryIcon.svg";
 import playIcon from "../assets/icons/playIcon.svg";
@@ -27,7 +28,7 @@ const formatarDuracao = (segundos: number) => {
 
 export default function ArtistPage() {
   const { id } = useParams<{ id: string }>();
-  const { tocarFaixa } = usePlayer();
+  const { faixaAtual, tocando, tocarFaixa, alternarPlayPause } = usePlayer();
   const [menuFaixa, setMenuFaixa] = useState<{ musica: Music; x: number; y: number } | null>(
     null,
   );
@@ -37,7 +38,6 @@ export default function ArtistPage() {
   const [musicasPopulares, setMusicasPopulares] = useState<Music[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-  const [tocando, setTocando] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -59,10 +59,9 @@ export default function ArtistPage() {
       .finally(() => setCarregando(false));
   }, [id]);
 
-  if (carregando)
-    return <p className="text-white p-4">Carregando artista...</p>;
-  if (erro) return <p className="text-red-400 p-4">{erro}</p>;
-  if (!artista) return null;
+  if (carregando) return <EstadoPagina>Carregando artista...</EstadoPagina>;
+  if (erro) return <EstadoPagina><p className="text-red-400">{erro}</p></EstadoPagina>;
+  if (!artista) return <EstadoPagina>Artista não encontrado.</EstadoPagina>;
 
   const capaPorMusica = new Map<string, string | null>();
   albuns.forEach((album) => {
@@ -78,6 +77,18 @@ export default function ArtistPage() {
     capa: capaPorMusica.get(musica.id) ?? null,
     nomeArtista: artista.name,
   }));
+
+  const faixaAtualEDesteArtista =
+    !!faixaAtual && filaPopulares.some((item) => item.musica.id === faixaAtual.musica.id);
+  const tocandoEsteArtista = tocando && faixaAtualEDesteArtista;
+
+  const alternarArtista = () => {
+    if (faixaAtualEDesteArtista) {
+      alternarPlayPause();
+    } else if (musicasPopulares[0]) {
+      tocarFaixa(filaPopulares, musicasPopulares[0].id);
+    }
+  };
 
   return (
     <div className="text-white bg-[#121212] rounded-lg flex-1 min-w-0 max-h-195 overflow-y-auto pb-[88px]">
@@ -107,11 +118,12 @@ export default function ArtistPage() {
       <div className="flex items-center gap-2.5 px-6 py-6">
         <button
           className="w-9 h-9 rounded-full bg-[#6FD168] flex items-center justify-center cursor-pointer transition-transform"
-          aria-label={tocando ? "Pausar" : "Tocar"}
-          onClick={() => setTocando((atual) => !atual)}
+          aria-label={tocandoEsteArtista ? "Pausar" : "Tocar"}
+          onClick={alternarArtista}
+          disabled={musicasPopulares.length === 0}
         >
           <img
-            src={tocando ? pauseIcon : playIcon}
+            src={tocandoEsteArtista ? pauseIcon : playIcon}
             alt=""
             className="w-[11.5px] h-[13.5px] invert"
           />

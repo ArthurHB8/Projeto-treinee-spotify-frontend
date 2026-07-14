@@ -57,7 +57,7 @@ export default function Library() {
           id: playlist.id,
           tipo: "Playlist",
           titulo: playlist.name,
-          artista: "Arthur Braz",
+          artista: "Arthur",
           imageUrl: playlist.imageUrl,
           pinnedAt: null,
           lastUsedAt: playlist.updatedAt ?? playlist.createdAt,

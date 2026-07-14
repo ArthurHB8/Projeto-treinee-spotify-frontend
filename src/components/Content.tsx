@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { resolveImageUrl } from "../api/client";
+import EstadoPagina from "./EstadoPagina";
 import {
   getUserPlaylists,
   getUserRecentAlbums,
@@ -154,8 +155,8 @@ export default function Main() {
       .finally(() => setCarregando(false));
   }, []);
 
-  if (carregando) return <p className="text-white p-4">Carregando...</p>;
-  if (erro) return <p className="text-red-400 p-4">{erro}</p>;
+  if (carregando) return <EstadoPagina>Carregando...</EstadoPagina>;
+  if (erro) return <EstadoPagina><p className="text-red-400">{erro}</p></EstadoPagina>;
 
   const acessoRapido = [
     ...albuns.map((album) => ({

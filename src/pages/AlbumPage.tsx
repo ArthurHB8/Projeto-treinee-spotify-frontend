@@ -5,6 +5,7 @@ import { getAlbumById } from "../api/album";
 import { resolveImageUrl } from "../api/client";
 import { usePlayer } from "../context/PlayerContext";
 import MenuFaixa from "../components/MenuFaixa";
+import EstadoPagina from "../components/EstadoPagina";
 import pauseIcon from "../assets/icons/pauseIcon.svg";
 import playIcon from "../assets/icons/playIcon.svg";
 import type { Album, Music } from "../api/types";
@@ -64,9 +65,9 @@ export default function AlbumPage() {
       .finally(() => setCarregando(false));
   }, [id]);
 
-  if (carregando) return <p className="text-white p-4">Carregando álbum...</p>;
-  if (erro) return <p className="text-red-400 p-4">{erro}</p>;
-  if (!album) return null;
+  if (carregando) return <EstadoPagina>Carregando álbum...</EstadoPagina>;
+  if (erro) return <EstadoPagina><p className="text-red-400">{erro}</p></EstadoPagina>;
+  if (!album) return <EstadoPagina>Álbum não encontrado.</EstadoPagina>;
 
   const capaAlbum = resolveImageUrl(album.imageUrl);
 

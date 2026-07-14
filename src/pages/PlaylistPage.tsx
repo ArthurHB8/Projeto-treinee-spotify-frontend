@@ -7,6 +7,7 @@ import { resolveImageUrl } from "../api/client";
 import { getPlaylistById } from "../api/playlist";
 import { usePlayer } from "../context/PlayerContext";
 import MenuFaixa from "../components/MenuFaixa";
+import EstadoPagina from "../components/EstadoPagina";
 import pauseIcon from "../assets/icons/pauseIcon.svg";
 import playIcon from "../assets/icons/playIcon.svg";
 import profilePicture from "../assets/profilePicture.jpg";
@@ -120,10 +121,9 @@ export default function PlaylistPage() {
     if (id) getPlaylistById(id).then(setPlaylist);
   };
 
-  if (carregando)
-    return <p className="text-white p-4">Carregando playlist...</p>;
-  if (erro) return <p className="text-red-400 p-4">{erro}</p>;
-  if (!playlist) return null;
+  if (carregando) return <EstadoPagina>Carregando playlist...</EstadoPagina>;
+  if (erro) return <EstadoPagina><p className="text-red-400">{erro}</p></EstadoPagina>;
+  if (!playlist) return <EstadoPagina>Playlist não encontrada.</EstadoPagina>;
 
   const capaPlaylist = resolveImageUrl(playlist.imageUrl);
 
@@ -157,15 +157,22 @@ export default function PlaylistPage() {
           />
         ) : (
           <div
-            className="w-[192px] h-[192px] bg-[#2a2a2a] shrink-0"
+            className="w-[192px] h-[192px] bg-[#2a2a2a] shrink-0 flex items-center justify-center text-6xl font-bold"
             aria-hidden="true"
-          />
+          >
+            {playlist.name.charAt(0).toUpperCase()}
+          </div>
         )}
         <div className="min-w-0">
           <p className="text-xs font-bold">Playlist pública</p>
           <h1 className="text-[64px] font-bold leading-none my-2 truncate">
             {playlist.name}
           </h1>
+          {playlist.description && (
+            <p className="text-sm text-texto-secundario mb-2 line-clamp-2">
+              {playlist.description}
+            </p>
+          )}
           <div className="flex items-center gap-1.5 text-[10px]">
             <img
               src={profilePicture}
