@@ -6,7 +6,6 @@ import Content from "./Content";
 import AlbumPage from "../pages/AlbumPage";
 import ArtistPage from "../pages/ArtistPage";
 import PlaylistPage from "../pages/PlaylistPage";
-import albumCover from "../assets/album-cover.png";
 
 export default function Main() {
   return (
@@ -18,7 +17,7 @@ export default function Main() {
         <Route path="/album/:id" element={<AlbumPage />} />
         <Route path="/playlist/:id" element={<PlaylistPage />} />
       </Routes>
-      <SongPanel titulo="Never Let Go" artista="LINGSHOT" capa={albumCover} />
+      <SongPanel />
     </div>
   );
 }

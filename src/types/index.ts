@@ -32,12 +32,6 @@ export type BibliotecaItem = {
   lastUsedAt: string;
 };
 
-export type SongPanelProps = {
-  titulo: string;
-  artista: string;
-  capa: string;
-};
-
 export type CardAcessoRapidoProps = {
   id: string;
   tipo: "Playlist" | "Álbum";
