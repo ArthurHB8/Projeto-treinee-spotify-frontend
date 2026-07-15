@@ -13,19 +13,19 @@ export default function SongPanel() {
   const capa = faixaAtual ? resolveImageUrl(faixaAtual.capa) : null;
 
   return (
-    <div className="w-[315px] min-w-[315px] shrink-0 p-3 bg-[#121212] rounded-lg text-white max-h-195 overflow-y-auto">
+    <div className="hidden max-h-[calc(100vh-63px)] shrink-0 overflow-y-auto rounded-lg bg-[#121212] p-3 pb-[88px] text-white md:block md:w-[315px] md:min-w-[315px]">
       {capa ? (
-        <img src={capa} className="w-full h-auto object-cover rounded-lg" />
+        <img src={capa} className="h-auto w-full rounded-lg object-cover" />
       ) : (
         <div
-          className="w-full aspect-square bg-[#2a2a2a] rounded-lg"
+          className="aspect-square w-full rounded-lg bg-[#2a2a2a]"
           aria-hidden="true"
         />
       )}
 
       <div>
         <h2 className="text-[20px] font-bold">{titulo}</h2>
-        <p className="text-[12px] text-texto-secundario">{artista}</p>
+        <p className="text-texto-secundario text-[12px]">{artista}</p>
       </div>
 
       {faixaAtual && <SobreArtista artistId={faixaAtual.musica.artistId} />}

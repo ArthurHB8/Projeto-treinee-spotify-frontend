@@ -27,8 +27,8 @@ export default function SobreArtista({ artistId }: SobreArtistaProps) {
 
   if (carregando) {
     return (
-      <div className="bg-fundo-cards rounded-lg mt-6 p-3">
-        <p className="text-xs text-texto-secundario">Carregando artista...</p>
+      <div className="bg-fundo-cards mt-6 rounded-lg p-3">
+        <p className="text-texto-secundario text-xs">Carregando artista...</p>
       </div>
     );
   }
@@ -38,37 +38,37 @@ export default function SobreArtista({ artistId }: SobreArtistaProps) {
   const imagem = resolveImageUrl(artista.imageUrl);
 
   return (
-    <div className="bg-fundo-cards rounded-lg mt-6">
+    <div className="bg-fundo-cards mt-6 rounded-lg">
       <div className="relative">
-        <p className="text-xs font-bold absolute top-0 left-0 p-3">
+        <p className="absolute top-0 left-0 p-3 text-xs font-bold">
           Sobre o artista
         </p>
         {imagem ? (
           <img
             src={imagem}
             alt={artista.name}
-            className="w-full h-auto object-cover rounded-lg"
+            className="h-auto w-full rounded-lg object-cover"
           />
         ) : (
           <div
-            className="w-full aspect-square bg-[#2a2a2a] rounded-lg"
+            className="aspect-square w-full rounded-lg bg-[#2a2a2a]"
             aria-hidden="true"
           />
         )}
       </div>
 
       <div>
-        <h2 className="text-xs p-3">{artista.name}</h2>
+        <h2 className="p-3 text-xs">{artista.name}</h2>
         <div className="flex items-center justify-between px-3">
-          <p className="text-[11px] text-texto-secundario">
+          <p className="text-texto-secundario text-[11px]">
             {formatarOuvintes(artista.listeners)} ouvintes mensais
           </p>
-          <button className="px-3 py-1.5 text-[10px] border border-[#7c7c7c] rounded-2xl cursor-pointer">
+          <button className="cursor-pointer rounded-2xl border border-[#7c7c7c] px-3 py-1.5 text-[10px]">
             Deixar de seguir
           </button>
         </div>
         {artista.about && (
-          <p className="text-[10px] text-texto-secundario p-3">
+          <p className="text-texto-secundario p-3 text-[10px]">
             {artista.about}
           </p>
         )}
