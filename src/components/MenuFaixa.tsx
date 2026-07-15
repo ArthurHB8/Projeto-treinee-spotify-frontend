@@ -15,7 +15,8 @@ type MenuFaixaProps = {
   onFaixaRemovida?: () => void;
 };
 
-const itemClasse = "w-full text-left px-3 py-2 hover:bg-white/10 cursor-pointer text-sm";
+const itemClasse =
+  "w-full text-left px-3 py-2 hover:bg-white/10 cursor-pointer text-sm";
 
 export default function MenuFaixa({
   musica,
@@ -74,7 +75,7 @@ export default function MenuFaixa({
     <div
       ref={ref}
       style={{ top: y, left: x }}
-      className="fixed z-[60] bg-[#282828] rounded-md shadow-xl py-1 min-w-[220px] text-white"
+      className="fixed z-[60] min-w-[220px] rounded-md bg-[#282828] py-1 text-white shadow-xl"
     >
       {mostrandoPlaylists ? (
         <>
@@ -88,12 +89,17 @@ export default function MenuFaixa({
             </button>
           ))}
           {playlists !== null && outrasPlaylists.length === 0 && (
-            <p className="px-3 py-2 text-xs text-texto-secundario">Nenhuma outra playlist</p>
+            <p className="text-texto-secundario px-3 py-2 text-xs">
+              Nenhuma outra playlist
+            </p>
           )}
         </>
       ) : (
         <>
-          <button className={itemClasse} onClick={() => setMostrandoPlaylists(true)}>
+          <button
+            className={itemClasse}
+            onClick={() => setMostrandoPlaylists(true)}
+          >
             Adicionar à playlist
           </button>
           <button

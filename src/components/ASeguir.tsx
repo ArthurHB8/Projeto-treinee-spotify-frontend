@@ -2,20 +2,20 @@ import imageNext from "../assets/image-next.png";
 
 export default function ASeguir() {
   return (
-    <div className="bg-fundo-cards rounded-lg mt-6 p-3 overflow-hidden">
-      <h2 className="text-xs font-bold mb-3">A Seguir</h2>
+    <div className="bg-fundo-cards mt-6 overflow-hidden rounded-lg p-3">
+      <h2 className="mb-3 text-xs font-bold">A Seguir</h2>
 
-      <div className="flex gap-3 items-center">
-        <div className="w-10.5 h-10.5">
+      <div className="flex items-center gap-3">
+        <div className="h-10.5 w-10.5">
           <img
             src={imageNext}
             alt="Next song"
-            className="w-full h-full object-cover rounded"
+            className="h-full w-full rounded object-cover"
           />
         </div>
         <div>
           <h3 className="text-[11px] font-semibold">Crew Love</h3>
-          <p className="text-[10px] text text-texto-secundario">
+          <p className="text text-texto-secundario text-[10px]">
             Drake, The Weeknd
           </p>
         </div>

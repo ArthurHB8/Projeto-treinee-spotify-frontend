@@ -6,7 +6,8 @@ export function ordenarItensBiblioteca(
   const unpinnedItens = itens.filter((item) => item.pinnedAt === null);
 
   const pinnedItens = itens.filter(
-    (item): item is BibliotecaItem & { pinnedAt: string } => item.pinnedAt !== null,
+    (item): item is BibliotecaItem & { pinnedAt: string } =>
+      item.pinnedAt !== null,
   );
 
   pinnedItens.sort(

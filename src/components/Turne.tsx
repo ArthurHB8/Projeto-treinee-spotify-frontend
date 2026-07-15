@@ -45,25 +45,25 @@ export default function Turne() {
   }
 
   return (
-    <div className="text-white bg-fundo-cards rounded-lg mt-6 p-3">
+    <div className="bg-fundo-cards mt-6 rounded-lg p-3 text-white">
       <h2 className="text-xs font-bold">Em turnê</h2>
       {eventosMock.slice(0, 3).map((evento) => (
         <a
           key={evento.id}
           href={evento.url}
-          className="flex gap-3 items-center hover:bg-[#3E3E3E] p-2 rounded transition-colors"
+          className="flex items-center gap-3 rounded p-2 transition-colors hover:bg-[#3E3E3E]"
         >
-          <div className="flex gap-3 items-center">
-            <div className="flex flex-col items-center justify-center rounded w-10.5 h-10.5 bg-[#121212]">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10.5 w-10.5 flex-col items-center justify-center rounded bg-[#121212]">
               <p className="text-[8px] font-bold">{evento.mes}</p>
               <p className="text-base font-bold">{evento.dia}</p>
             </div>
             <div className="flex flex-col">
               <h3 className="text-[11px] font-semibold">{evento.cidade}</h3>
-              <p className="text-[10px] text-texto-secundario">
+              <p className="text-texto-secundario text-[10px]">
                 {evento.artistas}
               </p>
-              <p className="text-[10px] text-texto-secundario">
+              <p className="text-texto-secundario text-[10px]">
                 {evento.detalhes}
               </p>
             </div>

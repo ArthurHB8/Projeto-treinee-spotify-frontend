@@ -35,7 +35,8 @@ const formatarData = (iso: string) =>
     year: "numeric",
   }).format(new Date(iso));
 
-const formatarMinutosTotais = (segundos: number) => `${Math.round(segundos / 60)} min`;
+const formatarMinutosTotais = (segundos: number) =>
+  `${Math.round(segundos / 60)} min`;
 
 const IconeRelogio = () => (
   <svg
@@ -80,9 +81,11 @@ export default function PlaylistPage() {
   );
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-  const [menuFaixa, setMenuFaixa] = useState<{ musica: Music; x: number; y: number } | null>(
-    null,
-  );
+  const [menuFaixa, setMenuFaixa] = useState<{
+    musica: Music;
+    x: number;
+    y: number;
+  } | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -122,7 +125,12 @@ export default function PlaylistPage() {
   };
 
   if (carregando) return <EstadoPagina>Carregando playlist...</EstadoPagina>;
-  if (erro) return <EstadoPagina><p className="text-red-400">{erro}</p></EstadoPagina>;
+  if (erro)
+    return (
+      <EstadoPagina>
+        <p className="text-red-400">{erro}</p>
+      </EstadoPagina>
+    );
   if (!playlist) return <EstadoPagina>Playlist não encontrada.</EstadoPagina>;
 
   const capaPlaylist = resolveImageUrl(playlist.imageUrl);
@@ -147,17 +155,17 @@ export default function PlaylistPage() {
   };
 
   return (
-    <div className="text-white bg-[#121212] rounded-lg flex-1 min-w-0 max-h-195 overflow-y-auto pb-[88px]">
-      <div className="flex items-end gap-6 p-6 bg-gradient-to-b from-[#5f5f5f] to-[#121212]">
+    <div className="max-h-[calc(100vh-63px)] min-w-0 flex-1 overflow-y-auto rounded-lg bg-[#121212] pb-[88px] text-white">
+      <div className="flex flex-col items-start gap-4 bg-gradient-to-b from-[#5f5f5f] to-[#121212] p-4 md:flex-row md:items-end md:gap-6 md:p-6">
         {capaPlaylist ? (
           <img
             src={capaPlaylist}
             alt={playlist.name}
-            className="w-[192px] h-[192px] object-cover shadow-2xl shrink-0"
+            className="h-[120px] w-[120px] shrink-0 object-cover shadow-2xl md:h-[192px] md:w-[192px]"
           />
         ) : (
           <div
-            className="w-[192px] h-[192px] bg-[#2a2a2a] shrink-0 flex items-center justify-center text-6xl font-bold"
+            className="flex h-[120px] w-[120px] shrink-0 items-center justify-center bg-[#2a2a2a] text-4xl font-bold md:h-[192px] md:w-[192px] md:text-6xl"
             aria-hidden="true"
           >
             {playlist.name.charAt(0).toUpperCase()}
@@ -165,11 +173,11 @@ export default function PlaylistPage() {
         )}
         <div className="min-w-0">
           <p className="text-xs font-bold">Playlist pública</p>
-          <h1 className="text-[64px] font-bold leading-none my-2 truncate">
+          <h1 className="my-2 truncate text-[28px] leading-none font-bold md:text-[64px]">
             {playlist.name}
           </h1>
           {playlist.description && (
-            <p className="text-sm text-texto-secundario mb-2 line-clamp-2">
+            <p className="text-texto-secundario mb-2 line-clamp-2 text-sm">
               {playlist.description}
             </p>
           )}
@@ -177,7 +185,7 @@ export default function PlaylistPage() {
             <img
               src={profilePicture}
               alt=""
-              className="w-4 h-4 rounded-full object-cover"
+              className="h-4 w-4 rounded-full object-cover"
             />
             <span className="font-bold">Arthur</span>
             <span className="text-texto-secundario">
@@ -186,7 +194,7 @@ export default function PlaylistPage() {
               {formatarMinutosTotais(playlist.duration)})
             </span>
           </div>
-          <p className="text-[10px] text-texto-secundario mt-1">
+          <p className="text-texto-secundario mt-1 text-[10px]">
             Criada em {formatarData(playlist.createdAt)}
             {playlist.updatedAt &&
               ` • Última modificação em ${formatarData(playlist.updatedAt)}`}
@@ -194,9 +202,9 @@ export default function PlaylistPage() {
         </div>
       </div>
 
-      <div className="px-6 py-6">
+      <div className="px-4 py-6 md:px-6">
         <button
-          className="w-9 h-9 rounded-full bg-[#6FD168] flex items-center justify-center cursor-pointer transition-transform"
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-[#6FD168] transition-transform"
           aria-label={tocandoEstaPlaylist ? "Pausar" : "Tocar"}
           onClick={alternarPlaylist}
           disabled={playlist.musics.length === 0}
@@ -204,18 +212,18 @@ export default function PlaylistPage() {
           <img
             src={tocandoEstaPlaylist ? pauseIcon : playIcon}
             alt=""
-            className="w-[11.5px] h-[13.5px] invert"
+            className="h-[13.5px] w-[11.5px] invert"
           />
         </button>
       </div>
 
-      <div className="px-6">
-        <div className="grid grid-cols-[24px_1fr_200px_140px_100px] gap-3 px-2 py-2 border-b border-[#2a2a2a] text-xs text-texto-secundario">
+      <div className="px-4 md:px-6">
+        <div className="text-texto-secundario grid grid-cols-[24px_1fr_60px] gap-3 border-b border-[#2a2a2a] px-2 py-2 text-xs md:grid-cols-[24px_1fr_200px_140px_100px]">
           <span>#</span>
           <span>Título</span>
-          <span>Álbum</span>
-          <span>Adicionada em</span>
-          <span className="flex justify-center">
+          <span className="hidden md:block">Álbum</span>
+          <span className="hidden md:block">Adicionada em</span>
+          <span className="hidden justify-center md:flex">
             <IconeRelogio />
           </span>
         </div>
@@ -233,39 +241,39 @@ export default function PlaylistPage() {
                 e.preventDefault();
                 setMenuFaixa({ musica, x: e.clientX, y: e.clientY });
               }}
-              className="grid grid-cols-[24px_1fr_200px_140px_100px] gap-3 items-center px-2 py-2 rounded-sm hover:bg-white/10 cursor-pointer group text-xs"
+              className="group grid cursor-pointer grid-cols-[24px_1fr_60px] items-center gap-3 rounded-sm px-2 py-2 text-xs hover:bg-white/10 md:grid-cols-[24px_1fr_200px_140px_100px]"
             >
               <span className="text-texto-secundario">{index + 1}</span>
-              <div className="flex items-center gap-3 min-w-0">
+              <div className="flex min-w-0 items-center gap-3">
                 {capaFaixa ? (
                   <img
                     src={capaFaixa}
                     alt={musica.title}
-                    className="w-10 h-10 object-cover shrink-0"
+                    className="h-10 w-10 shrink-0 object-cover"
                   />
                 ) : (
                   <div
-                    className="w-10 h-10 bg-[#2a2a2a] shrink-0"
+                    className="h-10 w-10 shrink-0 bg-[#2a2a2a]"
                     aria-hidden="true"
                   />
                 )}
-                <div className="min-w-0 flex flex-col gap-1">
-                  <p className="font-medium truncate">{musica.title}</p>
+                <div className="flex min-w-0 flex-col gap-1">
+                  <p className="truncate font-medium">{musica.title}</p>
                   <p className="text-texto-secundario truncate">
                     {artista?.name}
                   </p>
                 </div>
               </div>
-              <span className=" text-texto-secundario truncate">
+              <span className="text-texto-secundario hidden truncate md:block">
                 {album?.title}
               </span>
-              <span className="text-texto-secundario">
+              <span className="text-texto-secundario hidden md:block">
                 {formatarData(musica.createdAt)}
               </span>
-              <div className="flex items-center justify-end gap-3 text-texto-secundario">
+              <div className="text-texto-secundario flex items-center justify-end gap-3">
                 <span>{formatarDuracao(musica.duration)}</span>
                 <button
-                  className="opacity-0 group-hover:opacity-100 cursor-pointer"
+                  className="hidden cursor-pointer opacity-0 group-hover:opacity-100 md:block"
                   aria-label="Mais opções"
                   onClick={(e) => {
                     e.stopPropagation();
