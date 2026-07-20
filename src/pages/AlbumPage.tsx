@@ -117,22 +117,22 @@ export default function AlbumPage() {
 
   return (
     <div className="max-h-[calc(100vh-63px)] min-w-0 flex-1 overflow-y-auto rounded-lg bg-[#121212] pb-[88px] text-white">
-      <div className="flex flex-col items-start gap-4 bg-gradient-to-b from-[#5f5f5f] to-[#121212] p-4 md:flex-row md:items-end md:gap-6 md:p-6">
+      <div className="flex flex-col items-start gap-4 bg-linear-to-b from-[#5f5f5f] to-[#121212] p-4 xl:flex-row xl:items-end xl:gap-6 xl:p-6">
         {capaAlbum ? (
           <img
             src={capaAlbum}
             alt={album.title}
-            className="h-[120px] w-[120px] shrink-0 object-cover shadow-2xl md:h-[192px] md:w-[192px]"
+            className="h-[120px] w-[120px] shrink-0 object-cover shadow-2xl xl:h-[192px] xl:w-[192px]"
           />
         ) : (
           <div
-            className="h-[120px] w-[120px] shrink-0 bg-[#2a2a2a] md:h-[192px] md:w-[192px]"
+            className="h-[120px] w-[120px] shrink-0 bg-[#2a2a2a] xl:h-[192px] xl:w-[192px]"
             aria-hidden="true"
           />
         )}
         <div className="min-w-0">
           <p className="text-xs font-bold">Álbum</p>
-          <h1 className="my-2 truncate text-[28px] leading-none font-bold md:text-[64px]">
+          <h1 className="my-2 truncate text-[28px] leading-none font-bold xl:text-[64px]">
             {album.title}
           </h1>
           <div className="flex items-center gap-1.5 text-[10px]">
@@ -168,11 +168,11 @@ export default function AlbumPage() {
       </div>
 
       <div className="px-4 md:px-6">
-        <div className="text-texto-secundario grid grid-cols-[24px_1fr_60px] gap-3 border-b border-[#2a2a2a] px-2 py-2 text-xs md:grid-cols-[24px_1fr_140px_100px]">
+        <div className="text-texto-secundario grid grid-cols-[24px_1fr_60px] gap-3 border-b border-[#2a2a2a] px-2 py-2 text-xs xl:grid-cols-[24px_1fr_140px_100px]">
           <span>#</span>
           <span>Título</span>
-          <span className="hidden md:block">Reproduções</span>
-          <span className="hidden justify-center md:flex">
+          <span className="hidden xl:block">Reproduções</span>
+          <span className="hidden justify-center xl:flex">
             <IconeRelogio />
           </span>
         </div>
@@ -185,7 +185,7 @@ export default function AlbumPage() {
               e.preventDefault();
               setMenuFaixa({ musica, x: e.clientX, y: e.clientY });
             }}
-            className="group grid cursor-pointer grid-cols-[24px_1fr_60px] items-center gap-3 rounded-sm px-2 py-2 text-xs hover:bg-white/10 md:grid-cols-[24px_1fr_140px_100px]"
+            className="group grid cursor-pointer grid-cols-[24px_1fr_60px] items-center gap-3 rounded-sm px-2 py-2 text-xs hover:bg-white/10 xl:grid-cols-[24px_1fr_140px_100px]"
           >
             <span className="text-texto-secundario">{index + 1}</span>
             <div className="flex min-w-0 items-center gap-2">
@@ -196,13 +196,13 @@ export default function AlbumPage() {
                 </span>
               )}
             </div>
-            <span className="text-texto-secundario hidden md:block">
+            <span className="text-texto-secundario hidden xl:block">
               {formatarReproducoes(musica.timesListen)}
             </span>
             <div className="text-texto-secundario flex items-center justify-end gap-3">
               <span>{formatarDuracao(musica.duration)}</span>
               <button
-                className="hidden cursor-pointer opacity-0 group-hover:opacity-100 md:block"
+                className="hidden cursor-pointer opacity-0 group-hover:opacity-100 xl:block"
                 aria-label="Mais opções"
                 onClick={(e) => {
                   e.stopPropagation();
