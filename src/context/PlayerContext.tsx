@@ -17,6 +17,9 @@ type PlayerContextValue = {
   proximaFaixa: () => void;
   faixaAnterior: () => void;
   irParaProgresso: (segundos: number) => void;
+  mobileNowPlayingAberto: boolean;
+  abrirNowPlayingMobile: () => void;
+  fecharNowPlayingMobile: () => void;
 };
 
 const PlayerContext = createContext<PlayerContextValue | null>(null);
@@ -26,6 +29,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [indiceAtual, setIndiceAtual] = useState(0);
   const [tocando, setTocando] = useState(false);
   const [progresso, setProgresso] = useState(0);
+  const [mobileNowPlayingAberto, setMobileNowPlayingAberto] = useState(false);
 
   const faixaAtual = fila[indiceAtual] ?? null;
 
@@ -36,6 +40,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     setProgresso(0);
     setTocando(true);
   };
+
+  const abrirNowPlayingMobile = () => {
+    if (faixaAtual) setMobileNowPlayingAberto(true);
+  };
+
+  const fecharNowPlayingMobile = () => setMobileNowPlayingAberto(false);
 
   const alternarPlayPause = () => {
     if (faixaAtual) setTocando((atual) => !atual);
@@ -90,6 +100,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         proximaFaixa,
         faixaAnterior,
         irParaProgresso,
+        mobileNowPlayingAberto,
+        abrirNowPlayingMobile,
+        fecharNowPlayingMobile,
       }}
     >
       {children}

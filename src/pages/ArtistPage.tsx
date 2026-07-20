@@ -29,9 +29,11 @@ const formatarDuracao = (segundos: number) => {
 export default function ArtistPage() {
   const { id } = useParams<{ id: string }>();
   const { faixaAtual, tocando, tocarFaixa, alternarPlayPause } = usePlayer();
-  const [menuFaixa, setMenuFaixa] = useState<{ musica: Music; x: number; y: number } | null>(
-    null,
-  );
+  const [menuFaixa, setMenuFaixa] = useState<{
+    musica: Music;
+    x: number;
+    y: number;
+  } | null>(null);
 
   const [artista, setArtista] = useState<Artist | null>(null);
   const [albuns, setAlbuns] = useState<Album[]>([]);
@@ -60,7 +62,12 @@ export default function ArtistPage() {
   }, [id]);
 
   if (carregando) return <EstadoPagina>Carregando artista...</EstadoPagina>;
-  if (erro) return <EstadoPagina><p className="text-red-400">{erro}</p></EstadoPagina>;
+  if (erro)
+    return (
+      <EstadoPagina>
+        <p className="text-red-400">{erro}</p>
+      </EstadoPagina>
+    );
   if (!artista) return <EstadoPagina>Artista não encontrado.</EstadoPagina>;
 
   const capaPorMusica = new Map<string, string | null>();
@@ -79,7 +86,8 @@ export default function ArtistPage() {
   }));
 
   const faixaAtualEDesteArtista =
-    !!faixaAtual && filaPopulares.some((item) => item.musica.id === faixaAtual.musica.id);
+    !!faixaAtual &&
+    filaPopulares.some((item) => item.musica.id === faixaAtual.musica.id);
   const tocandoEsteArtista = tocando && faixaAtualEDesteArtista;
 
   const alternarArtista = () => {
@@ -91,22 +99,22 @@ export default function ArtistPage() {
   };
 
   return (
-    <div className="text-white bg-[#121212] rounded-lg flex-1 min-w-0 max-h-195 overflow-y-auto pb-[88px]">
-      <div className="relative h-[380px] flex items-end p-6 bg-gradient-to-b from-[#5f5f5f] to-[#121212]">
+    <div className="max-h-[calc(100vh-63px)] min-w-0 flex-1 overflow-y-auto rounded-lg bg-[#121212] pb-[88px] text-white">
+      <div className="relative flex h-[220px] items-end bg-gradient-to-b from-[#5f5f5f] to-[#121212] p-4 md:h-[380px] md:p-6">
         {capaArtista && (
           <img
             src={capaArtista}
             alt={artista.name}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         )}
         <div className="absolute inset-0" />
-        <div className="relative z-10">
-          <h1 className="text-[64px] font-bold leading-none mb-4">
+        <div className="relative z-10 min-w-0">
+          <h1 className="mb-4 truncate text-[28px] leading-none font-bold md:text-[64px]">
             {artista.name}
           </h1>
-          <div className="flex items-center gap-1.5 text-xs font-medium mb-1.5 text-xs">
-            <img src={verifiedIcon} alt="" className="w-4 h-4" />
+          <div className="mb-1.5 flex items-center gap-1.5 text-xs font-medium">
+            <img src={verifiedIcon} alt="" className="h-4 w-4" />
             Verificado pelo Spotify
           </div>
           <p className="text-xs">
@@ -115,9 +123,9 @@ export default function ArtistPage() {
         </div>
       </div>
 
-      <div className="flex items-center gap-2.5 px-6 py-6">
+      <div className="flex items-center gap-2.5 px-4 py-6 md:px-6">
         <button
-          className="w-9 h-9 rounded-full bg-[#6FD168] flex items-center justify-center cursor-pointer transition-transform"
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-[#6FD168] transition-transform"
           aria-label={tocandoEsteArtista ? "Pausar" : "Tocar"}
           onClick={alternarArtista}
           disabled={musicasPopulares.length === 0}
@@ -125,16 +133,16 @@ export default function ArtistPage() {
           <img
             src={tocandoEsteArtista ? pauseIcon : playIcon}
             alt=""
-            className="w-[11.5px] h-[13.5px] invert"
+            className="h-[13.5px] w-[11.5px] invert"
           />
         </button>
-        <button className="border border-[#7c7c7c] rounded-full px-3 py-1.5 text-xs font-bold cursor-pointer hover:border-white">
+        <button className="cursor-pointer rounded-full border border-[#7c7c7c] px-3 py-1.5 text-xs font-bold hover:border-white">
           Seguir
         </button>
       </div>
 
-      <section className="px-6 mb-8">
-        <h2 className="text-[16px] font-bold mb-4">Populares</h2>
+      <section className="mb-8 px-4 md:px-6">
+        <h2 className="mb-4 text-[16px] font-bold">Populares</h2>
         <div className="flex flex-col">
           {musicasPopulares.map((musica, index) => {
             const capaMusica = resolveImageUrl(
@@ -149,42 +157,42 @@ export default function ArtistPage() {
                   e.preventDefault();
                   setMenuFaixa({ musica, x: e.clientX, y: e.clientY });
                 }}
-                className="grid grid-cols-[24px_1fr_auto] items-center gap-2.5 px-2 py-2 rounded-sm hover:bg-white/10 cursor-pointer"
+                className="grid cursor-pointer grid-cols-[24px_1fr_auto] items-center gap-2.5 rounded-sm px-2 py-2 hover:bg-white/10"
               >
-                <span className="text-sm text-texto-secundario text-center">
+                <span className="text-texto-secundario text-center text-sm">
                   {index + 1}
                 </span>
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex min-w-0 items-center gap-3">
                   {capaMusica ? (
                     <img
                       src={capaMusica}
                       alt={musica.title}
-                      className="w-10 h-10 object-cover shrink-0"
+                      className="h-10 w-10 shrink-0 object-cover"
                     />
                   ) : (
                     <div
-                      className="w-10 h-10 bg-[#2a2a2a] shrink-0"
+                      className="h-10 w-10 shrink-0 bg-[#2a2a2a]"
                       aria-hidden="true"
                     />
                   )}
                   <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">
+                    <p className="truncate text-sm font-medium">
                       {musica.title}
                     </p>
                     {musica.explicit && (
-                      <span className="inline-block text-[9px] font-bold bg-texto-secundario text-black px-1 leading-tight rounded-xs mt-0.5">
+                      <span className="bg-texto-secundario mt-0.5 inline-block rounded-xs px-1 text-[9px] leading-tight font-bold text-black">
                         E
                       </span>
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2.5 text-xs text-texto-secundario">
+                <div className="text-texto-secundario flex items-center gap-2.5 text-xs">
                   <span>{formatarOuvintes(musica.timesListen)}</span>
                   {musica.playlistsId.length > 0 && (
                     <img
                       src={inLibraryIcon}
                       alt="Na sua biblioteca"
-                      className="w-3.5 h-3.5"
+                      className="h-3.5 w-3.5"
                     />
                   )}
                   <span>{formatarDuracao(musica.duration)}</span>
@@ -193,19 +201,19 @@ export default function ArtistPage() {
             );
           })}
         </div>
-        <button className="text-xs text-texto-secundario hover:text-white cursor-pointer mt-2">
+        <button className="text-texto-secundario mt-2 cursor-pointer text-xs hover:text-white">
           Mostrar tudo
         </button>
       </section>
 
-      <section className="px-6 pb-8">
-        <div className="flex items-center justify-between mb-4">
+      <section className="px-4 pb-8 md:px-6">
+        <div className="mb-4 flex items-center justify-between">
           <h2 className="text-[16px] font-bold">Discografia</h2>
-          <button className="text-xs text-texto-secundario hover:text-white cursor-pointer">
+          <button className="text-texto-secundario cursor-pointer text-xs hover:text-white">
             Mostrar tudo
           </button>
         </div>
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
           {albuns.map((album) => {
             const capaAlbum = resolveImageUrl(album.imageUrl);
 
@@ -213,22 +221,22 @@ export default function ArtistPage() {
               <Link
                 key={album.id}
                 to={`/album/${album.id}`}
-                className="flex flex-col gap-2 p-2 rounded-sm hover:bg-white/5 no-underline text-inherit"
+                className="flex flex-col gap-2 rounded-sm p-2 text-inherit no-underline hover:bg-white/5"
               >
                 {capaAlbum ? (
                   <img
                     src={capaAlbum}
                     alt={album.title}
-                    className="w-full aspect-square object-cover rounded-md shadow-md"
+                    className="aspect-square w-full rounded-md object-cover shadow-md"
                   />
                 ) : (
                   <div
-                    className="w-full aspect-square bg-[#2a2a2a] rounded-md"
+                    className="aspect-square w-full rounded-md bg-[#2a2a2a]"
                     aria-hidden="true"
                   />
                 )}
-                <p className="text-sm font-medium truncate">{album.title}</p>
-                <p className="text-xs text-texto-secundario">{album.year}</p>
+                <p className="truncate text-sm font-medium">{album.title}</p>
+                <p className="text-texto-secundario text-xs">{album.year}</p>
               </Link>
             );
           })}
@@ -236,9 +244,9 @@ export default function ArtistPage() {
       </section>
 
       {artista.about && (
-        <section className="px-6 pb-8">
-          <h2 className="text-[16px] font-bold mb-4">Sobre</h2>
-          <p className="text-sm text-texto-secundario max-w-[720px]">
+        <section className="px-4 pb-8 md:px-6">
+          <h2 className="mb-4 text-[16px] font-bold">Sobre</h2>
+          <p className="text-texto-secundario max-w-[720px] text-sm">
             {artista.about}
           </p>
         </section>

@@ -6,7 +6,7 @@ type EstadoPaginaProps = {
 
 export default function EstadoPagina({ children }: EstadoPaginaProps) {
   return (
-    <div className="text-white bg-[#121212] rounded-lg flex-1 min-w-0 max-h-195 overflow-y-auto pb-[88px] flex items-center justify-center">
+    <div className="flex max-h-[calc(100vh-63px)] min-w-0 flex-1 items-center justify-center overflow-y-auto rounded-lg bg-[#121212] pb-[88px] text-white">
       {children}
     </div>
   );

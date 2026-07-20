@@ -21,23 +21,24 @@ export default function LibraryItem({
   return (
     <Link
       to={`${rotaPorTipo[tipo]}/${id}`}
-      className="flex gap-2 items-center cursor-pointer hover:bg-[#2A2A2A] p-1 rounded no-underline text-inherit"
+      aria-label={titulo}
+      className="flex cursor-pointer items-center justify-center gap-0 rounded p-1 text-inherit no-underline hover:bg-[#2A2A2A] md:justify-start md:gap-2"
     >
       {imageUrl ? (
         <img
           src={resolveImageUrl(imageUrl)!}
           alt={titulo}
-          className={`w-10 h-10 shrink-0 object-cover ${arredondado}`}
+          className={`h-10 w-10 shrink-0 object-cover ${arredondado}`}
         />
       ) : (
         <div
-          className={`w-10 h-10 shrink-0 flex items-center justify-center bg-[#2a2a2a] text-white text-sm font-bold ${arredondado}`}
+          className={`flex h-10 w-10 shrink-0 items-center justify-center bg-[#2a2a2a] text-sm font-bold text-white ${arredondado}`}
           aria-hidden="true"
         >
           {titulo.charAt(0).toUpperCase()}
         </div>
       )}
-      <div>
+      <div className="hidden md:block">
         <p className="text-[10px] font-bold">{titulo}</p>
         <p className="text-[10px] text-[#B3B3B3]">
           {tipo === "artista" ? "Artista" : `${tipo} • ${artista}`}

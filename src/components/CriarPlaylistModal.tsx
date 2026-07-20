@@ -8,7 +8,10 @@ type CriarPlaylistModalProps = {
   onCriada: (playlist: PlaylistNoMusic) => void;
 };
 
-export default function CriarPlaylistModal({ onFechar, onCriada }: CriarPlaylistModalProps) {
+export default function CriarPlaylistModal({
+  onFechar,
+  onCriada,
+}: CriarPlaylistModalProps) {
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
   const [arquivo, setArquivo] = useState<File | null>(null);
@@ -58,25 +61,31 @@ export default function CriarPlaylistModal({ onFechar, onCriada }: CriarPlaylist
 
   return (
     <div
-      className="fixed inset-0 bg-black/70 flex items-center justify-center z-[70]"
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70"
       onClick={onFechar}
     >
       <div
-        className="bg-[#282828] rounded-md p-6 w-[420px] text-white"
+        className="w-[420px] rounded-md bg-[#282828] p-6 text-white"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-bold mb-4">Criar playlist</h2>
+        <h2 className="mb-4 text-lg font-bold">Criar playlist</h2>
 
-        <div className="flex gap-4 mb-3">
+        <div className="mb-3 flex gap-4">
           <label
             htmlFor="imagem-playlist"
-            className="w-24 h-24 bg-[#3a3a3a] rounded-sm shrink-0 flex items-center justify-center cursor-pointer overflow-hidden text-2xl font-bold"
+            className="flex h-24 w-24 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-[#3a3a3a] text-2xl font-bold"
             title="Escolher foto"
           >
             {preview ? (
-              <img src={preview} alt="" className="w-full h-full object-cover" />
+              <img
+                src={preview}
+                alt=""
+                className="h-full w-full object-cover"
+              />
             ) : (
-              <span aria-hidden="true">{nome.trim().charAt(0).toUpperCase() || "+"}</span>
+              <span aria-hidden="true">
+                {nome.trim().charAt(0).toUpperCase() || "+"}
+              </span>
             )}
           </label>
           <input
@@ -87,8 +96,11 @@ export default function CriarPlaylistModal({ onFechar, onCriada }: CriarPlaylist
             onChange={aoSelecionarArquivo}
           />
 
-          <div className="flex-1 min-w-0">
-            <label className="block text-xs font-bold mb-1" htmlFor="nome-playlist">
+          <div className="min-w-0 flex-1">
+            <label
+              className="mb-1 block text-xs font-bold"
+              htmlFor="nome-playlist"
+            >
               Nome
             </label>
             <input
@@ -96,13 +108,16 @@ export default function CriarPlaylistModal({ onFechar, onCriada }: CriarPlaylist
               value={nome}
               onChange={(e) => setNome(e.target.value)}
               placeholder="Minha playlist"
-              className="w-full bg-[#3a3a3a] rounded-sm px-3 py-2 text-sm outline-none"
+              className="w-full rounded-sm bg-[#3a3a3a] px-3 py-2 text-sm outline-none"
               autoFocus
             />
           </div>
         </div>
 
-        <label className="block text-xs font-bold mb-1" htmlFor="descricao-playlist">
+        <label
+          className="mb-1 block text-xs font-bold"
+          htmlFor="descricao-playlist"
+        >
           Descrição (opcional)
         </label>
         <textarea
@@ -110,20 +125,20 @@ export default function CriarPlaylistModal({ onFechar, onCriada }: CriarPlaylist
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Adicione uma descrição opcional"
-          className="w-full bg-[#3a3a3a] rounded-sm px-3 py-2 text-sm outline-none mb-3 resize-none h-20"
+          className="mb-3 h-20 w-full resize-none rounded-sm bg-[#3a3a3a] px-3 py-2 text-sm outline-none"
         />
 
-        {erro && <p className="text-red-400 text-xs mb-3">{erro}</p>}
+        {erro && <p className="mb-3 text-xs text-red-400">{erro}</p>}
 
         <div className="flex justify-end gap-2">
           <button
-            className="px-4 py-2 text-sm font-bold cursor-pointer text-texto-secundario hover:text-white"
+            className="text-texto-secundario cursor-pointer px-4 py-2 text-sm font-bold hover:text-white"
             onClick={onFechar}
           >
             Cancelar
           </button>
           <button
-            className="px-4 py-2 text-sm font-bold rounded-full bg-white text-black cursor-pointer disabled:opacity-50"
+            className="cursor-pointer rounded-full bg-white px-4 py-2 text-sm font-bold text-black disabled:opacity-50"
             onClick={criar}
             disabled={enviando}
           >

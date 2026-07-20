@@ -9,8 +9,8 @@ import profilePicture from "../assets/profilePicture.jpg";
 
 export default function NavBar() {
   return (
-    <div className="bg-black flex justify-between items-center text-texto-secundario p-3 fixed top-0 h-15 w-full z-50 ">
-      <div>
+    <div className="text-texto-secundario fixed top-0 z-50 flex h-15 w-full items-center justify-between bg-black p-3">
+      <div className="hidden md:block">
         <img src={spotifyLogo} alt="Spotify Logo" />
       </div>
 
@@ -18,31 +18,41 @@ export default function NavBar() {
       <div className="flex items-center gap-1">
         <Link
           to="/"
-          className="rounded-full bg-fundo-cards w-9 h-9 flex items-center justify-center"
+          className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full"
         >
           <img src={homeIcon} alt="Home" />
         </Link>
-        <div className="flex bg-fundo-cards rounded-2xl px-2 py-1 h-9 gap-1 items-center w-[355px]">
-          <img src={searchIcon} alt="Search" className="w-2.5 h-2.5" />
+        <div className="bg-fundo-cards hidden h-9 w-[355px] items-center gap-1 rounded-2xl px-2 py-1 md:flex">
+          <img src={searchIcon} alt="Search" className="h-2.5 w-2.5" />
           <input
             placeholder="O que voce quer ouvir?"
-            className="text-[10px] placeholder:text-[#B3B3B3] rounded-sm w-full outline-none bg-transparent"
+            className="w-full rounded-sm bg-transparent text-[10px] outline-none placeholder:text-[#B3B3B3]"
           />
         </div>
+        <button
+          className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full md:hidden"
+          aria-label="Buscar"
+        >
+          <img src={searchIcon} alt="" className="h-3.5 w-3.5" />
+        </button>
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1.5 text-[10px]">
-          <img src={downloadIcon} alt="Download" className="w-3 h-3" />
+        <div className="hidden items-center gap-1.5 text-[10px] md:flex">
+          <img src={downloadIcon} alt="Download" className="h-3 w-3" />
           Instalar app
         </div>
         <div className="flex items-center gap-3">
-          <img src={notificationIcon} alt="Notification" className="w-3 h-3" />
-          <div className="rounded-full bg-fundo-cards w-9 h-9 flex items-center justify-center">
+          <img
+            src={notificationIcon}
+            alt="Notification"
+            className="hidden h-3 w-3 md:block"
+          />
+          <div className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full">
             <img
               src={profilePicture}
               alt="Profile"
-              className="w-2/3 h-2/3 rounded-full"
+              className="h-2/3 w-2/3 rounded-full"
             />
           </div>
         </div>

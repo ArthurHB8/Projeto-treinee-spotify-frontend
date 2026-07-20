@@ -20,7 +20,7 @@ import type {
 const BotaoFiltro = ({ texto, ativo, onClick }: BotaoFiltroProps) => {
   return (
     <button
-      className={`px-[15.5px] py-2.5 text-[10px] rounded-full cursor-pointer transition-colors ${
+      className={`cursor-pointer rounded-full px-[15.5px] py-2.5 text-[10px] transition-colors ${
         ativo
           ? "bg-white text-black"
           : "bg-[#343333] text-white hover:bg-[#4a4a4a]"
@@ -99,17 +99,17 @@ export default function Library() {
   });
 
   return (
-    <div className="text-white bg-[#121212] rounded-lg p-3 pb-[88px] w-78 min-w-78 shrink-0 max-h-195 overflow-y-auto">
-      <div className="flex justify-between items-center mb-3">
+    <div className="max-h-[calc(100vh-63px)] w-16 min-w-16 shrink-0 overflow-y-auto rounded-lg bg-[#121212] p-1 pb-[88px] text-white md:w-78 md:min-w-78 md:p-3 md:pb-[88px]">
+      <div className="mb-3 hidden items-center justify-between md:flex">
         <h2 className="text-xs font-bold">Sua biblioteca</h2>
         <button
-          className="px-3 py-1.5 text-[10px] font-bold border border-[#7c7c7c] rounded-2xl cursor-pointer"
+          className="cursor-pointer rounded-2xl border border-[#7c7c7c] px-3 py-1.5 text-[10px] font-bold"
           onClick={() => setCriandoPlaylist(true)}
         >
           Criar playlist
         </button>
       </div>
-      <div className="flex gap-2 mb-3">
+      <div className="mb-3 hidden gap-2 md:flex">
         <BotaoFiltro
           texto="Tudo"
           ativo={filtroAtivo === "Tudo"}
@@ -132,34 +132,36 @@ export default function Library() {
         />
       </div>
 
-      <div className="flex bg-[#2D2D2D] rounded-sm px-2 py-1 h-[20px] gap-1">
-        <img src={searchIcon} alt="Search" className="w-2.5 h-2.5" />
+      <div className="hidden h-[20px] gap-1 rounded-sm bg-[#2D2D2D] px-2 py-1 md:flex">
+        <img src={searchIcon} alt="Search" className="h-2.5 w-2.5" />
         <input
           placeholder="Buscar em Sua Biblioteca"
-          className="text-[10px] placeholder:text-[#B3B3B3] rounded-sm w-full outline-none bg-transparent"
+          className="w-full rounded-sm bg-transparent text-[10px] outline-none placeholder:text-[#B3B3B3]"
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
         />
       </div>
 
       {carregando && (
-        <p className="text-center text-[10px] text-[#B3B3B3] mt-4">
+        <p className="mt-4 hidden text-center text-[10px] text-[#B3B3B3] md:block">
           Carregando...
         </p>
       )}
 
       {!carregando && erro && (
-        <p className="text-center text-[10px] text-red-400 mt-4">{erro}</p>
+        <p className="mt-4 hidden text-center text-[10px] text-red-400 md:block">
+          {erro}
+        </p>
       )}
 
       {!carregando && !erro && itensFiltrados.length === 0 && (
-        <p className="text-center text-[10px] text-[#B3B3B3] mt-4">
+        <p className="mt-4 hidden text-center text-[10px] text-[#B3B3B3] md:block">
           Nenhum item encontrado
         </p>
       )}
 
       {!carregando && !erro && (
-        <div className="mt-3 flex flex-col gap-2">
+        <div className="mt-3 flex flex-col items-center gap-2 md:items-stretch">
           {itensFiltrados.map((item) => (
             <LibraryItem
               key={item.id}

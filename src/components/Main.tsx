@@ -9,7 +9,7 @@ import PlaylistPage from "../pages/PlaylistPage";
 
 export default function Main() {
   return (
-    <div className="flex w-full h-screen bg-black gap-2 px-1 mt-[63px]">
+    <div className="mt-[63px] flex h-screen w-full gap-2 bg-black px-1">
       <Library />
       <Routes>
         <Route path="/" element={<Content />} />

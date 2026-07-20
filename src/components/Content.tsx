@@ -20,7 +20,7 @@ import type {
 const BotaoFiltro = ({ texto, ativo, onClick }: BotaoFiltroProps) => {
   return (
     <button
-      className={`px-[15.5px] py-2.5 text-[10px] rounded-full cursor-pointer transition-colors ${
+      className={`cursor-pointer rounded-full px-[15.5px] py-2.5 text-[10px] transition-colors ${
         ativo
           ? "bg-white text-black"
           : "bg-[#343333] text-white hover:bg-[#4a4a4a]"
@@ -40,90 +40,90 @@ const CardAcessoRapido = ({
 }: CardAcessoRapidoProps) => (
   <Link
     to={`${tipo === "Álbum" ? "/album" : "/playlist"}/${id}`}
-    className="flex items-center bg-[#2a2a2a] rounded-sm overflow-hidden hover:bg-[#3a3a3a] cursor-pointer h-10 no-underline text-inherit"
+    className="flex h-10 cursor-pointer items-center overflow-hidden rounded-sm bg-[#2a2a2a] text-inherit no-underline hover:bg-[#3a3a3a]"
   >
     {capa ? (
       <img
         src={capa}
         alt={titulo}
-        className="w-10 h-10 object-cover shrink-0"
+        className="h-10 w-10 shrink-0 object-cover"
       />
     ) : (
       <div
-        className="w-10 h-10 bg-[#3a3a3a] shrink-0 flex items-center justify-center text-xs font-bold"
+        className="flex h-10 w-10 shrink-0 items-center justify-center bg-[#3a3a3a] text-xs font-bold"
         aria-hidden="true"
       >
         {titulo.charAt(0).toUpperCase()}
       </div>
     )}
-    <p className="text-xs font-bold px-2 flex-1 truncate">{titulo}</p>
+    <p className="flex-1 truncate px-2 text-xs font-bold">{titulo}</p>
   </Link>
 );
 
 const CardPlaylist = ({ id, capa, titulo, artista }: CardPlaylistProps) => (
   <Link
     to={`/playlist/${id}`}
-    className="flex flex-col gap-1.5 cursor-pointer hover:bg-[#2a2a2a] p-1.5 rounded-sm no-underline text-inherit shrink-0 w-[150px]"
+    className="flex w-[76px] shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:w-[150px]"
   >
     {capa ? (
       <img
         src={capa}
         alt={titulo}
-        className="w-full aspect-square object-cover rounded-sm shadow-md"
+        className="h-[60px] w-[60px] rounded-sm object-cover shadow-md md:aspect-square md:h-auto md:w-full"
       />
     ) : (
       <div
-        className="w-full aspect-square bg-[#2a2a2a] rounded-sm shadow-md"
+        className="h-[60px] w-[60px] rounded-sm bg-[#2a2a2a] shadow-md md:aspect-square md:h-auto md:w-full"
         aria-hidden="true"
       />
     )}
-    <p className="text-[10px] font-bold truncate">{titulo}</p>
-    <p className="text-[9px] text-[#B3B3B3] truncate">Playlist • {artista}</p>
+    <p className="truncate text-[10px] font-bold">{titulo}</p>
+    <p className="truncate text-[9px] text-[#B3B3B3]">Playlist • {artista}</p>
   </Link>
 );
 
 const CardAlbum = ({ id, capa, titulo, artista }: CardPlaylistProps) => (
   <Link
     to={`/album/${id}`}
-    className="flex flex-col gap-1.5 cursor-pointer hover:bg-[#2a2a2a] p-1.5 rounded-sm no-underline text-inherit shrink-0 w-[150px]"
+    className="flex w-[76px] shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:w-[150px]"
   >
     {capa ? (
       <img
         src={capa}
         alt={titulo}
-        className="w-full aspect-square object-cover rounded-sm shadow-md"
+        className="h-[60px] w-[60px] rounded-sm object-cover shadow-md md:aspect-square md:h-auto md:w-full"
       />
     ) : (
       <div
-        className="w-full aspect-square bg-[#2a2a2a] rounded-sm shadow-md"
+        className="h-[60px] w-[60px] rounded-sm bg-[#2a2a2a] shadow-md md:aspect-square md:h-auto md:w-full"
         aria-hidden="true"
       />
     )}
-    <p className="text-[10px] font-bold truncate">{titulo}</p>
-    <p className="text-[9px] text-[#B3B3B3] truncate">Álbum • {artista}</p>
+    <p className="truncate text-[10px] font-bold">{titulo}</p>
+    <p className="truncate text-[9px] text-[#B3B3B3]">Álbum • {artista}</p>
   </Link>
 );
 
 const CardArtista = ({ id, capa, nome }: CardArtistaProps) => (
   <Link
     to={`/artist/${id}`}
-    className="flex flex-col gap-1.5 cursor-pointer min-h-[172px] shrink-0 hover:bg-[#2a2a2a] p-1.5 rounded-sm no-underline text-inherit"
+    className="flex min-h-[104px] shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:min-h-[172px]"
   >
     {capa ? (
       <img
         src={capa}
         alt={nome}
-        className="w-33 h-33 aspect-square object-cover rounded-full shadow-md"
+        className="h-[60px] w-[60px] rounded-full object-cover shadow-md md:h-33 md:w-33"
       />
     ) : (
       <div
-        className="w-full aspect-square bg-[#2a2a2a] rounded-full shadow-md flex items-center justify-center text-sm font-bold"
+        className="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[#2a2a2a] text-sm font-bold shadow-md md:h-33 md:w-33"
         aria-hidden="true"
       >
         {nome.charAt(0).toUpperCase()}
       </div>
     )}
-    <p className="text-[10px] font-bold truncate">{nome}</p>
+    <p className="truncate text-[10px] font-bold">{nome}</p>
     <p className="text-[9px] text-[#B3B3B3]">Artista</p>
   </Link>
 );
@@ -156,7 +156,12 @@ export default function Main() {
   }, []);
 
   if (carregando) return <EstadoPagina>Carregando...</EstadoPagina>;
-  if (erro) return <EstadoPagina><p className="text-red-400">{erro}</p></EstadoPagina>;
+  if (erro)
+    return (
+      <EstadoPagina>
+        <p className="text-red-400">{erro}</p>
+      </EstadoPagina>
+    );
 
   const acessoRapido = [
     ...albuns.map((album) => ({
@@ -174,8 +179,8 @@ export default function Main() {
   ].slice(0, 8);
 
   return (
-    <div className="text-white bg-[#121212] rounded-lg p-3 pb-[88px] flex-1 min-w-0 max-h-195 overflow-y-auto">
-      <div className="flex gap-2 mb-4">
+    <div className="max-h-[calc(100vh-63px)] min-w-0 flex-1 overflow-y-auto rounded-lg bg-[#121212] p-3 pb-[88px] text-white">
+      <div className="mb-4 flex gap-2">
         <BotaoFiltro
           texto="Tudo"
           ativo={filtroAtivo === "Tudo"}
@@ -193,7 +198,7 @@ export default function Main() {
         />
       </div>
 
-      <div className="grid grid-cols-4 gap-2 mb-6">
+      <div className="mb-6 grid grid-cols-2 gap-2 md:grid-cols-4">
         {acessoRapido.map((item) => (
           <CardAcessoRapido
             key={`${item.tipo}-${item.id}`}
@@ -206,7 +211,7 @@ export default function Main() {
       </div>
 
       <section className="mb-6">
-        <h2 className="text-base font-bold mb-3">Suas Playlists</h2>
+        <h2 className="mb-3 text-base font-bold">Suas Playlists</h2>
         <div className="flex gap-2 overflow-x-auto pb-1">
           {playlists.map((playlist) => (
             <CardPlaylist
@@ -221,9 +226,9 @@ export default function Main() {
       </section>
 
       <section className="mb-6">
-        <div className="flex justify-between items-center mb-3">
+        <div className="mb-3 flex items-center justify-between">
           <h2 className="text-base font-bold">Artistas recentes</h2>
-          <button className="text-[10px] text-[#B3B3B3] hover:text-white cursor-pointer">
+          <button className="cursor-pointer text-[10px] text-[#B3B3B3] hover:text-white">
             Mostrar tudo
           </button>
         </div>
@@ -240,9 +245,9 @@ export default function Main() {
       </section>
 
       <section>
-        <div className="flex justify-between items-center mb-3">
+        <div className="mb-3 flex items-center justify-between">
           <h2 className="text-base font-bold">Álbuns recentes</h2>
-          <button className="text-[10px] text-[#B3B3B3] hover:text-white cursor-pointer">
+          <button className="cursor-pointer text-[10px] text-[#B3B3B3] hover:text-white">
             Mostrar tudo
           </button>
         </div>
