@@ -10,6 +10,7 @@ import type { FaixaFila } from "../types";
 
 type PlayerContextValue = {
   faixaAtual: FaixaFila | null;
+  proximaFaixaFila: FaixaFila | null;
   tocando: boolean;
   progresso: number;
   tocarFaixa: (fila: FaixaFila[], musicaId: string) => void;
@@ -32,6 +33,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [mobileNowPlayingAberto, setMobileNowPlayingAberto] = useState(false);
 
   const faixaAtual = fila[indiceAtual] ?? null;
+  const proximaFaixaFila = fila[indiceAtual + 1] ?? null;
 
   const tocarFaixa = (novaFila: FaixaFila[], musicaId: string) => {
     const indice = novaFila.findIndex((item) => item.musica.id === musicaId);
@@ -93,6 +95,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     <PlayerContext.Provider
       value={{
         faixaAtual,
+        proximaFaixaFila,
         tocando,
         progresso,
         tocarFaixa,

@@ -187,7 +187,7 @@ export default function PlaylistPage() {
               alt=""
               className="h-4 w-4 rounded-full object-cover"
             />
-            <span className="font-bold">Arthur</span>
+            <span className="font-bold">Vitoria Tenorio</span>
             <span className="text-texto-secundario">
               • {playlist.musicQtd} músicas,{" "}
               {formatarDuracaoTotal(playlist.duration)} (

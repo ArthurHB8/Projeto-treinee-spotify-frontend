@@ -219,7 +219,7 @@ export default function Main() {
               id={playlist.id}
               capa={resolveImageUrl(playlist.imageUrl)}
               titulo={playlist.name}
-              artista="Arthur Braz"
+              artista="Vitoria Tenorio"
             />
           ))}
         </div>
