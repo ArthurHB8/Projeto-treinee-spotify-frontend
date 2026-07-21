@@ -5,6 +5,15 @@ import { addMusicToPlaylist, removeMusicFromPlaylist } from "../api/playlist";
 import { getUserPlaylists } from "../api/user";
 import type { Music, PlaylistNoMusic } from "../api/types";
 
+import addIcon from "../assets/icons/addIcon.svg";
+import removeIcon from "../assets/icons/removeIcon.svg";
+import addLikedSongsIcon from "../assets/icons/addLikedSongs.svg";
+import alreadyLibraryIcon from "../assets/icons/alreadyLibraryIcon.svg";
+import goToArtistIcon from "../assets/icons/goToArtistIcon.svg";
+import goToAlbumIcon from "../assets/icons/goToAlbumIcon.svg";
+import creditsIcon from "../assets/icons/creditsIcon.svg";
+import chevronDownIcon from "../assets/icons/chevronDownIcon.svg";
+
 type MenuFaixaProps = {
   musica: Music;
   x: number;
@@ -16,7 +25,7 @@ type MenuFaixaProps = {
 };
 
 const itemClasse =
-  "w-full text-left px-3 py-2 hover:bg-white/10 cursor-pointer text-sm";
+  "flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-white/10 cursor-pointer";
 
 export default function MenuFaixa({
   musica,
@@ -67,6 +76,18 @@ export default function MenuFaixa({
     });
   };
 
+  const salvarEmMusicasCurtidas = () => {
+    getUserPlaylists().then((playlistsNomes) => {
+      const playlistCurtidas = playlistsNomes.find(
+        (p) => p.name === "Músicas Curtidas",
+      );
+      if (playlistCurtidas) {
+        addMusicToPlaylist(playlistCurtidas.id, musica.id);
+      }
+      onFechar();
+    });
+  };
+
   const outrasPlaylists = (playlists ?? []).filter(
     (playlist) => playlist.id !== playlistIdAtual,
   );
@@ -74,8 +95,8 @@ export default function MenuFaixa({
   return (
     <div
       ref={ref}
-      style={{ top: y, left: x }}
-      className="fixed z-[60] min-w-[220px] rounded-md bg-[#282828] py-1 text-white shadow-xl"
+      style={{ top: y, left: x, maxHeight: `calc(100vh - ${y}px - 80px)` }}
+      className="fixed z-[60] min-w-[220px] overflow-y-auto rounded-md bg-[#282828] py-1 text-white shadow-xl"
     >
       {mostrandoPlaylists ? (
         <>
@@ -97,11 +118,41 @@ export default function MenuFaixa({
       ) : (
         <>
           <button
-            className={itemClasse}
+            className={`${itemClasse} justify-between`}
             onClick={() => setMostrandoPlaylists(true)}
           >
-            Adicionar à playlist
+            <span className="flex items-center gap-2">
+              <img src={addIcon} alt="" className="h-3.5 w-3.5" />
+              Adicionar à playlist
+            </span>
+            <img
+              src={chevronDownIcon}
+              alt=""
+              className="h-2.5 w-2.5 -rotate-90"
+            />
           </button>
+
+          {playlistIdAtual && (
+            <button className={itemClasse} onClick={remover}>
+              <img src={removeIcon} alt="" className="h-3.5 w-3.5" />
+              Remover desta playlist
+            </button>
+          )}
+
+          <button className={itemClasse} onClick={salvarEmMusicasCurtidas}>
+            <img src={addLikedSongsIcon} alt="" className="h-4 w-4" />
+            Salvar em Músicas Curtidas
+          </button>
+
+          {musica.playlistsId.length > 0 && (
+            <button className={itemClasse}>
+              <img src={alreadyLibraryIcon} alt="" className="h-4 w-4" />
+              Remover da sua biblioteca
+            </button>
+          )}
+
+          <div className="my-1 border-t border-white/10" />
+
           <button
             className={itemClasse}
             onClick={() => {
@@ -109,8 +160,10 @@ export default function MenuFaixa({
               onFechar();
             }}
           >
+            <img src={goToArtistIcon} alt="" className="h-4 w-4" />
             Ir para o artista
           </button>
+
           {!ocultarLinkAlbum && (
             <button
               className={itemClasse}
@@ -119,14 +172,15 @@ export default function MenuFaixa({
                 onFechar();
               }}
             >
+              <img src={goToAlbumIcon} alt="" className="h-4 w-4" />
               Ir para o álbum
             </button>
           )}
-          {playlistIdAtual && (
-            <button className={`${itemClasse} text-red-400`} onClick={remover}>
-              Remover da playlist
-            </button>
-          )}
+
+          <button className={itemClasse}>
+            <img src={creditsIcon} alt="" className="h-4 w-4" />
+            Ver créditos
+          </button>
         </>
       )}
     </div>
