@@ -99,7 +99,7 @@ export default function Library() {
   });
 
   return (
-    <div className="max-h-[calc(100vh-63px)] w-16 min-w-16 shrink-0 overflow-y-auto rounded-lg bg-[#121212] p-1 pb-22 text-white md:w-56 md:min-w-56 md:p-3 md:pb-22 lg:w-78 lg:min-w-78">
+    <div className="h-full min-h-0 w-16 min-w-16 shrink-0 overflow-y-auto rounded-lg bg-[#121212] p-1 text-white md:w-56 md:min-w-56 md:p-3 md:pb-22 lg:w-78 lg:min-w-78">
       <div className="mb-3 hidden items-center justify-between md:flex">
         <h2 className="text-xs font-bold">Sua biblioteca</h2>
         <button

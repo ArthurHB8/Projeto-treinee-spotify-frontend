@@ -179,7 +179,7 @@ export default function Main() {
   ].slice(0, 8);
 
   return (
-    <div className="max-h-[calc(100vh-63px)] min-w-0 flex-1 overflow-y-auto rounded-lg bg-[#121212] p-3 pb-[88px] text-white">
+    <div className="h-full min-h-0 min-w-0 flex-1 overflow-y-auto rounded-lg bg-[#121212] p-3 text-white">
       <div className="mb-4 flex gap-2">
         <BotaoFiltro
           texto="Tudo"

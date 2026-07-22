@@ -7,9 +7,9 @@ import { PlayerProvider } from "./context/PlayerContext";
 export default function App() {
   return (
     <PlayerProvider>
-      <div className="h-screen w-screen overflow-hidden bg-black">
+      <div className="flex h-screen w-screen flex-col overflow-hidden bg-black">
         <NavBar />
-        <div className="mt-[13px]">
+        <div className="min-h-0 flex-1 pt-[13px]">
           <Main />
         </div>
         <TocandoAgoraMobile />
