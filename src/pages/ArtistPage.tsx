@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useDraggable } from "@dnd-kit/react";
+import { useDragDropMonitor } from "@dnd-kit/react";
 
 import {
   getAlbumsByArtistId,
   getArtistById,
   getPopularMusicsByArtistId,
 } from "../api/artist";
+import { addMusicToPlaylist } from "../api/playlist";
 import { resolveImageUrl } from "../api/client";
 import { usePlayer } from "../context/PlayerContext";
 import MenuFaixa from "../components/MenuFaixa";
@@ -24,6 +27,70 @@ const formatarDuracao = (segundos: number) => {
   const minutos = Math.floor(segundos / 60);
   const restante = segundos % 60;
   return `${minutos}:${String(restante).padStart(2, "0")}`;
+};
+
+type ArtistSongRow = {
+  musica: Music;
+  index: number;
+  capaMusica: string | null;
+  aoTocar: () => void;
+  aoAbrirMenu: (e: React.MouseEvent) => void;
+};
+
+const ArtistSong = ({
+  musica,
+  index,
+  capaMusica,
+  aoTocar,
+  aoAbrirMenu,
+}: ArtistSongRow) => {
+  const { ref } = useDraggable({ id: musica.id, type: "song" });
+
+  return (
+    <div
+      ref={ref}
+      onClick={aoTocar}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        aoAbrirMenu(e);
+      }}
+      className="grid cursor-pointer grid-cols-[24px_1fr_auto] items-center gap-2.5 rounded-sm px-2 py-2 hover:bg-white/10"
+    >
+      <span className="text-texto-secundario text-center text-sm">
+        {index + 1}
+      </span>
+      <div className="flex min-w-0 items-center gap-3">
+        {capaMusica ? (
+          <img
+            src={capaMusica}
+            alt={musica.title}
+            className="h-10 w-10 shrink-0 object-cover"
+          />
+        ) : (
+          <div className="h-10 w-10 shrink-0 bg-[#2a2a2a]" aria-hidden="true" />
+        )}
+        <div className="min-w-0">
+          <p className="truncate text-sm font-medium">{musica.title}</p>
+          {musica.explicit && (
+            <span className="bg-texto-secundario mt-0.5 inline-block rounded-xs px-1 text-[9px] leading-tight font-bold text-black">
+              E
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="text-texto-secundario flex items-center gap-2.5 text-xs">
+        <span>{formatarOuvintes(musica.timesListen)}</span>
+        {musica.playlistsId.length > 0 && (
+          <img
+            src={inLibraryIcon}
+            alt="Na sua biblioteca"
+            className="h-3.5 w-3.5"
+          />
+        )}
+        <span>{formatarDuracao(musica.duration)}</span>
+      </div>
+    </div>
+  );
 };
 
 export default function ArtistPage() {
@@ -60,6 +127,23 @@ export default function ArtistPage() {
       .catch(() => setErro("Não foi possível carregar os dados do artista."))
       .finally(() => setCarregando(false));
   }, [id]);
+
+  useDragDropMonitor({
+    onDragEnd(event) {
+      if (event.canceled) return;
+      const musicIdSource = event.operation.source?.id as string;
+
+      if (event.operation.target?.type === "playlist") {
+        const targetPlaylist = (
+          event.operation.target.data as {
+            playlistId: string;
+          }
+        ).playlistId;
+
+        addMusicToPlaylist(targetPlaylist, musicIdSource);
+      }
+    },
+  });
 
   if (carregando) return <EstadoPagina>Carregando artista...</EstadoPagina>;
   if (erro)
@@ -144,62 +228,18 @@ export default function ArtistPage() {
       <section className="mb-8 px-4 md:px-6">
         <h2 className="mb-4 text-[16px] font-bold">Populares</h2>
         <div className="flex flex-col">
-          {musicasPopulares.map((musica, index) => {
-            const capaMusica = resolveImageUrl(
-              capaPorMusica.get(musica.id) ?? null,
-            );
-
-            return (
-              <div
-                key={musica.id}
-                onClick={() => tocarFaixa(filaPopulares, musica.id)}
-                onContextMenu={(e) => {
-                  e.preventDefault();
-                  setMenuFaixa({ musica, x: e.clientX, y: e.clientY });
-                }}
-                className="grid cursor-pointer grid-cols-[24px_1fr_auto] items-center gap-2.5 rounded-sm px-2 py-2 hover:bg-white/10"
-              >
-                <span className="text-texto-secundario text-center text-sm">
-                  {index + 1}
-                </span>
-                <div className="flex min-w-0 items-center gap-3">
-                  {capaMusica ? (
-                    <img
-                      src={capaMusica}
-                      alt={musica.title}
-                      className="h-10 w-10 shrink-0 object-cover"
-                    />
-                  ) : (
-                    <div
-                      className="h-10 w-10 shrink-0 bg-[#2a2a2a]"
-                      aria-hidden="true"
-                    />
-                  )}
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium">
-                      {musica.title}
-                    </p>
-                    {musica.explicit && (
-                      <span className="bg-texto-secundario mt-0.5 inline-block rounded-xs px-1 text-[9px] leading-tight font-bold text-black">
-                        E
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="text-texto-secundario flex items-center gap-2.5 text-xs">
-                  <span>{formatarOuvintes(musica.timesListen)}</span>
-                  {musica.playlistsId.length > 0 && (
-                    <img
-                      src={inLibraryIcon}
-                      alt="Na sua biblioteca"
-                      className="h-3.5 w-3.5"
-                    />
-                  )}
-                  <span>{formatarDuracao(musica.duration)}</span>
-                </div>
-              </div>
-            );
-          })}
+          {musicasPopulares.map((musica, index) => (
+            <ArtistSong
+              key={musica.id}
+              musica={musica}
+              index={index}
+              capaMusica={resolveImageUrl(capaPorMusica.get(musica.id) ?? null)}
+              aoTocar={() => tocarFaixa(filaPopulares, musica.id)}
+              aoAbrirMenu={(e) =>
+                setMenuFaixa({ musica, x: e.clientX, y: e.clientY })
+              }
+            />
+          ))}
         </div>
         <button className="text-texto-secundario mt-2 cursor-pointer text-xs hover:text-white">
           Mostrar tudo

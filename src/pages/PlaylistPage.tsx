@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSortable } from "@dnd-kit/react/sortable";
+import { useDragDropMonitor } from "@dnd-kit/react";
+import { move } from "@dnd-kit/helpers";
 
+import { reorderPlaylist } from "../api/playlist";
+import { addMusicToPlaylist } from "../api/playlist";
 import { getAlbumById } from "../api/album";
 import { getArtistById } from "../api/artist";
 import { resolveImageUrl } from "../api/client";
@@ -72,6 +77,84 @@ const IconeMais = () => (
   </svg>
 );
 
+type PlaylistSongRow = {
+  musica: Music;
+  index: number;
+  groupId: string;
+  album?: Album;
+  artista?: Artist;
+  aoTocar: () => void;
+  aoAbrirMenu: (e: React.MouseEvent) => void;
+};
+
+const PlaylistRow = ({
+  musica,
+  index,
+  groupId,
+  album,
+  artista,
+  aoTocar,
+  aoAbrirMenu,
+}: PlaylistSongRow) => {
+  const { ref } = useSortable({
+    id: musica.id,
+    index,
+    group: groupId,
+    type: "song",
+    accept: "song",
+  });
+
+  const capaFaixa = resolveImageUrl(album?.imageUrl ?? null);
+
+  return (
+    <div
+      ref={ref}
+      onClick={aoTocar}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        aoAbrirMenu(e);
+      }}
+      className="group grid cursor-pointer grid-cols-[24px_1fr_60px] items-center gap-3 rounded-sm px-2 py-2 text-xs hover:bg-white/10 md:grid-cols-[24px_1fr_200px_140px_100px]"
+    >
+      <span className="text-texto-secundario">{index + 1}</span>
+      <div className="flex min-w-0 items-center gap-3">
+        {capaFaixa ? (
+          <img
+            src={capaFaixa}
+            alt={musica.title}
+            className="h-10 w-10 shrink-0 object-cover"
+          />
+        ) : (
+          <div className="h-10 w-10 shrink-0 bg-[#2a2a2a]" aria-hidden="true" />
+        )}
+        <div className="flex min-w-0 flex-col gap-1">
+          <p className="truncate font-medium">{musica.title}</p>
+          <p className="text-texto-secundario truncate">{artista?.name}</p>
+        </div>
+      </div>
+      <span className="text-texto-secundario hidden truncate md:block">
+        {album?.title}
+      </span>
+      <span className="text-texto-secundario hidden md:block">
+        {formatarData(musica.createdAt)}
+      </span>
+      <div className="text-texto-secundario item-center flex justify-end gap-3">
+        <span>{formatarDuracao(musica.duration)}</span>
+        <button
+          className="hidden cursor-pointer opacity-0 group-hover:opacity-100 md:block"
+          aria-label="Mais opções"
+          onClick={(e) => {
+            e.stopPropagation();
+            aoAbrirMenu(e);
+          }}
+        >
+          <IconeMais />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export default function PlaylistPage() {
   const { id } = useParams<{ id: string }>();
   const { faixaAtual, tocando, tocarFaixa, alternarPlayPause } = usePlayer();
@@ -125,6 +208,38 @@ export default function PlaylistPage() {
   const recarregarAposRemocao = () => {
     if (id) getPlaylistById(id).then(setPlaylist);
   };
+
+  useDragDropMonitor({
+    onDragOver(event) {
+      setPlaylist((atual) => {
+        if (!atual) return atual;
+        return { ...atual, musics: move(atual.musics, event) };
+      });
+    },
+
+    onDragEnd(event) {
+      if (event.canceled || !playlist) return;
+      const musicIdSource = event.operation.source?.id as string;
+
+      if (event.operation.target?.type === "song") {
+        const musicIds = playlist.musics.map((musica) => musica.id);
+
+        reorderPlaylist(playlist.id, musicIds).catch(() =>
+          recarregarAposRemocao(),
+        );
+      } else if (event.operation.target?.type === "playlist") {
+        const targetPlaylist = (
+          event.operation.target.data as {
+            playlistId: string;
+          }
+        ).playlistId;
+
+        if (targetPlaylist === playlist.id) return;
+
+        addMusicToPlaylist(targetPlaylist, musicIdSource);
+      }
+    },
+  });
 
   if (carregando) return <EstadoPagina>Carregando playlist...</EstadoPagina>;
   if (erro)
@@ -225,64 +340,20 @@ export default function PlaylistPage() {
           </span>
         </div>
 
-        {playlist.musics.map((musica, index) => {
-          const album = albunsPorId.get(musica.albumId);
-          const artista = artistasPorId.get(musica.artistId);
-          const capaFaixa = resolveImageUrl(album?.imageUrl ?? null);
-
-          return (
-            <div
-              key={musica.id}
-              onClick={() => tocarFaixa(filaPlaylist, musica.id)}
-              onContextMenu={(e) => {
-                e.preventDefault();
-                setMenuFaixa({ musica, x: e.clientX, y: e.clientY });
-              }}
-              className="group grid cursor-pointer grid-cols-[24px_1fr_60px] items-center gap-3 rounded-sm px-2 py-2 text-xs hover:bg-white/10 md:grid-cols-[24px_1fr_200px_140px_100px]"
-            >
-              <span className="text-texto-secundario">{index + 1}</span>
-              <div className="flex min-w-0 items-center gap-3">
-                {capaFaixa ? (
-                  <img
-                    src={capaFaixa}
-                    alt={musica.title}
-                    className="h-10 w-10 shrink-0 object-cover"
-                  />
-                ) : (
-                  <div
-                    className="h-10 w-10 shrink-0 bg-[#2a2a2a]"
-                    aria-hidden="true"
-                  />
-                )}
-                <div className="flex min-w-0 flex-col gap-1">
-                  <p className="truncate font-medium">{musica.title}</p>
-                  <p className="text-texto-secundario truncate">
-                    {artista?.name}
-                  </p>
-                </div>
-              </div>
-              <span className="text-texto-secundario hidden truncate md:block">
-                {album?.title}
-              </span>
-              <span className="text-texto-secundario hidden md:block">
-                {formatarData(musica.createdAt)}
-              </span>
-              <div className="text-texto-secundario flex items-center justify-end gap-3">
-                <span>{formatarDuracao(musica.duration)}</span>
-                <button
-                  className="hidden cursor-pointer opacity-0 group-hover:opacity-100 md:block"
-                  aria-label="Mais opções"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setMenuFaixa({ musica, x: e.clientX, y: e.clientY });
-                  }}
-                >
-                  <IconeMais />
-                </button>
-              </div>
-            </div>
-          );
-        })}
+        {playlist.musics.map((musica, index) => (
+          <PlaylistRow
+            key={musica.id}
+            musica={musica}
+            index={index}
+            groupId={playlist.id}
+            album={albunsPorId.get(musica.albumId)}
+            artista={artistasPorId.get(musica.artistId)}
+            aoTocar={() => tocarFaixa(filaPlaylist, musica.id)}
+            aoAbrirMenu={(e) =>
+              setMenuFaixa({ musica, x: e.clientX, y: e.clientY })
+            }
+          />
+        ))}
       </div>
 
       {menuFaixa && (

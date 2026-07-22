@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useDraggable } from "@dnd-kit/react";
+import { useDragDropMonitor } from "@dnd-kit/react";
 
+import { addMusicToPlaylist } from "../api/playlist";
 import { getAlbumById } from "../api/album";
 import { resolveImageUrl } from "../api/client";
 import { usePlayer } from "../context/PlayerContext";
@@ -60,6 +63,55 @@ const IconeMais = () => (
   </svg>
 );
 
+type AlbumSongRows = {
+  musica: Music;
+  index: number;
+  aoTocar: () => void;
+  aoAbrirMenu: (e: React.MouseEvent) => void;
+};
+
+const AlbumSongs = ({ musica, index, aoTocar, aoAbrirMenu }: AlbumSongRows) => {
+  const { ref } = useDraggable({ id: musica.id, type: "song" });
+
+  return (
+    <div
+      ref={ref}
+      onClick={aoTocar}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        aoAbrirMenu(e);
+      }}
+      className="group grid cursor-pointer grid-cols-[24px_1fr_60px] items-center gap-3 rounded-sm px-2 py-2 text-xs hover:bg-white/10 xl:grid-cols-[24px_1fr_140px_100px]"
+    >
+      <span className="text-texto-secundario">{index + 1}</span>
+      <div className="flex min-w-0 items-center gap-2">
+        <p className="truncate font-medium">{musica.title}</p>
+        {musica.explicit && (
+          <span className="bg-texto-secundario shrink-0 rounded-xs px-1 text-[9px] leading-tight font-bold text-black">
+            E
+          </span>
+        )}
+      </div>
+      <span className="text-texto-secundario hidden xl:block">
+        {formatarReproducoes(musica.timesListen)}
+      </span>
+      <div className="text-texto-secundario flex items-center justify-end gap-3">
+        <span>{formatarDuracao(musica.duration)}</span>
+        <button
+          className="hidden cursor-pointer opacity-0 group-hover:opacity-100 xl:block"
+          aria-label="Mais opções"
+          onClick={(e) => {
+            e.stopPropagation();
+            aoAbrirMenu(e);
+          }}
+        >
+          <IconeMais />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export default function AlbumPage() {
   const { id } = useParams<{ id: string }>();
   const { faixaAtual, tocando, tocarFaixa, alternarPlayPause } = usePlayer();
@@ -84,6 +136,23 @@ export default function AlbumPage() {
       .catch(() => setErro("Não foi possível carregar o álbum."))
       .finally(() => setCarregando(false));
   }, [id]);
+
+  useDragDropMonitor({
+    onDragEnd(event) {
+      if (event.canceled) return;
+      const musicIdSource = event.operation.source?.id as string;
+
+      if (event.operation.target?.type === "playlist") {
+        const targetPlaylist = (
+          event.operation.target.data as {
+            playlistId: string;
+          }
+        ).playlistId;
+
+        addMusicToPlaylist(targetPlaylist, musicIdSource);
+      }
+    },
+  });
 
   if (carregando) return <EstadoPagina>Carregando álbum...</EstadoPagina>;
   if (erro)
@@ -178,41 +247,15 @@ export default function AlbumPage() {
         </div>
 
         {album.musics.map((musica, index) => (
-          <div
+          <AlbumSongs
             key={musica.id}
-            onClick={() => tocarFaixa(filaAlbum, musica.id)}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              setMenuFaixa({ musica, x: e.clientX, y: e.clientY });
-            }}
-            className="group grid cursor-pointer grid-cols-[24px_1fr_60px] items-center gap-3 rounded-sm px-2 py-2 text-xs hover:bg-white/10 xl:grid-cols-[24px_1fr_140px_100px]"
-          >
-            <span className="text-texto-secundario">{index + 1}</span>
-            <div className="flex min-w-0 items-center gap-2">
-              <p className="truncate font-medium">{musica.title}</p>
-              {musica.explicit && (
-                <span className="bg-texto-secundario shrink-0 rounded-xs px-1 text-[9px] leading-tight font-bold text-black">
-                  E
-                </span>
-              )}
-            </div>
-            <span className="text-texto-secundario hidden xl:block">
-              {formatarReproducoes(musica.timesListen)}
-            </span>
-            <div className="text-texto-secundario flex items-center justify-end gap-3">
-              <span>{formatarDuracao(musica.duration)}</span>
-              <button
-                className="hidden cursor-pointer opacity-0 group-hover:opacity-100 xl:block"
-                aria-label="Mais opções"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setMenuFaixa({ musica, x: e.clientX, y: e.clientY });
-                }}
-              >
-                <IconeMais />
-              </button>
-            </div>
-          </div>
+            musica={musica}
+            index={index}
+            aoTocar={() => tocarFaixa(filaAlbum, musica.id)}
+            aoAbrirMenu={(e) =>
+              setMenuFaixa({ musica, x: e.clientX, y: e.clientY })
+            }
+          />
         ))}
       </div>
 

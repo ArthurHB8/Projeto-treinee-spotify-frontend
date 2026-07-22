@@ -9,7 +9,7 @@ export default function App() {
     <PlayerProvider>
       <div className="flex h-screen w-screen flex-col overflow-hidden bg-black">
         <NavBar />
-        <div className="min-h-0 flex-1 pt-[13px]">
+        <div className="min-h-0 flex-1">
           <Main />
         </div>
         <TocandoAgoraMobile />

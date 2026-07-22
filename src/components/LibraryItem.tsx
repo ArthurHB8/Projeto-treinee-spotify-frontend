@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useDroppable } from "@dnd-kit/react";
 
 import { resolveImageUrl } from "../api/client";
 import type { LibraryItemProps } from "../types";
@@ -18,11 +19,20 @@ export default function LibraryItem({
 }: LibraryItemProps) {
   const arredondado = tipo === "artista" ? "rounded-full" : "rounded-xs";
 
+  const { ref, isDropTarget } = useDroppable<{ playlistId: string }>({
+    id: `library-playlist-${id}`,
+    type: "playlist",
+    accept: "song",
+    disabled: tipo !== "Playlist",
+    data: { playlistId: id },
+  });
+
   return (
     <Link
+      ref={ref}
       to={`${rotaPorTipo[tipo]}/${id}`}
       aria-label={titulo}
-      className="flex cursor-pointer items-center justify-center gap-0 rounded p-1 text-inherit no-underline hover:bg-[#2A2A2A] md:justify-start md:gap-2"
+      className={`flex cursor-pointer items-center justify-center gap-0 rounded p-1 text-inherit no-underline hover:bg-[#2A2A2A] md:justify-start md:gap-2 ${isDropTarget ? "bg-white/10" : ""}`}
     >
       {imageUrl ? (
         <img
