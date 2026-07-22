@@ -47,7 +47,7 @@ export default function SobreArtista({ artistId }: SobreArtistaProps) {
           <img
             src={imagem}
             alt={artista.name}
-            className="h-auto w-full rounded-lg object-cover"
+            className="h-45 w-full rounded-lg object-cover"
           />
         ) : (
           <div
@@ -64,7 +64,7 @@ export default function SobreArtista({ artistId }: SobreArtistaProps) {
             {formatarOuvintes(artista.listeners)} ouvintes mensais
           </p>
           <button className="cursor-pointer rounded-2xl border border-[#7c7c7c] px-3 py-1.5 text-[10px]">
-            Deixar de seguir
+            Seguir
           </button>
         </div>
         {artista.about && (

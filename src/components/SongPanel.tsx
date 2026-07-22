@@ -7,10 +7,11 @@ import ASeguir from "./ASeguir";
 
 export default function SongPanel() {
   const { faixaAtual } = usePlayer();
+  if (!faixaAtual) return null;
 
-  const titulo = faixaAtual?.musica.title ?? "Nenhuma música tocando";
-  const artista = faixaAtual?.nomeArtista ?? "";
-  const capa = faixaAtual ? resolveImageUrl(faixaAtual.capa) : null;
+  const titulo = faixaAtual.musica.title;
+  const artista = faixaAtual.nomeArtista;
+  const capa = resolveImageUrl(faixaAtual.capa);
 
   return (
     <div className="hidden h-full min-h-0 shrink-0 overflow-y-auto rounded-lg bg-[#121212] p-3 text-white lg:block lg:w-78.75 lg:min-w-78.75">
@@ -30,7 +31,7 @@ export default function SongPanel() {
 
       {faixaAtual && <SobreArtista artistId={faixaAtual.musica.artistId} />}
 
-      <Creditos />
+      {faixaAtual && <Creditos artistId={faixaAtual.musica.artistId} />}
 
       <Turne />
 
