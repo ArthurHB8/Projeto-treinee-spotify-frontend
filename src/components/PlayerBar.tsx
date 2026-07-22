@@ -71,7 +71,7 @@ export default function PlayerBar() {
           )}
         </div>
 
-        <div className="flex w-[40%] max-w-[722px] flex-col items-center gap-2">
+        <div className="flex w-[40%] max-w-180.5 flex-col items-center gap-2">
           <div className="flex items-center gap-5">
             <button
               className="cursor-pointer disabled:cursor-default disabled:opacity-40"

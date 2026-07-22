@@ -13,7 +13,7 @@ export default function SongPanel() {
   const capa = faixaAtual ? resolveImageUrl(faixaAtual.capa) : null;
 
   return (
-    <div className="hidden h-full min-h-0 shrink-0 overflow-y-auto rounded-lg bg-[#121212] p-3 text-white lg:block lg:w-[315px] lg:min-w-[315px]">
+    <div className="hidden h-full min-h-0 shrink-0 overflow-y-auto rounded-lg bg-[#121212] p-3 text-white lg:block lg:w-78.75 lg:min-w-78.75">
       {capa ? (
         <img src={capa} className="h-auto w-full rounded-lg object-cover" />
       ) : (

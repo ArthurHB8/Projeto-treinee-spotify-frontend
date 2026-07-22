@@ -6,11 +6,13 @@ import { getArtistById } from "../api/artist";
 import { resolveImageUrl } from "../api/client";
 import { getPlaylistById } from "../api/playlist";
 import { usePlayer } from "../context/PlayerContext";
+
 import MenuFaixa from "../components/MenuFaixa";
 import EstadoPagina from "../components/EstadoPagina";
 import pauseIcon from "../assets/icons/pauseIcon.svg";
 import playIcon from "../assets/icons/playIcon.svg";
-import profilePicture from "../assets/profilePicture.jpg";
+import profilePicture from "../assets/profilePicture.png";
+
 import type { Album, Artist, Music, Playlist } from "../api/types";
 import type { FaixaFila } from "../types";
 
@@ -155,29 +157,29 @@ export default function PlaylistPage() {
   };
 
   return (
-    <div className="max-h-[calc(100vh-63px)] min-w-0 flex-1 overflow-y-auto rounded-lg bg-[#121212] pb-[88px] text-white">
-      <div className="flex flex-col items-start gap-4 bg-gradient-to-b from-[#5f5f5f] to-[#121212] p-4 md:flex-row md:items-end md:gap-6 md:p-6">
+    <div className="min-w-0 flex-1 overflow-y-auto rounded-lg bg-[#121212] pb-22 text-white">
+      <div className="flex flex-col items-start gap-4 bg-linear-to-b from-[#938D8E] to-[#3E3939] p-4 md:flex-row md:items-end md:gap-6 md:p-6">
         {capaPlaylist ? (
           <img
             src={capaPlaylist}
             alt={playlist.name}
-            className="h-[120px] w-[120px] shrink-0 object-cover shadow-2xl md:h-[192px] md:w-[192px]"
+            className="h-30 w-30 shrink-0 object-cover md:h-[174px] md:w-[174px]"
           />
         ) : (
           <div
-            className="flex h-[120px] w-[120px] shrink-0 items-center justify-center bg-[#2a2a2a] text-4xl font-bold md:h-[192px] md:w-[192px] md:text-6xl"
+            className="flex h-[120px] w-[120px] shrink-0 items-center justify-center bg-[#2a2a2a] text-4xl font-bold md:h-[174px] md:w-[174px] md:text-6xl"
             aria-hidden="true"
           >
             {playlist.name.charAt(0).toUpperCase()}
           </div>
         )}
         <div className="min-w-0">
-          <p className="text-xs font-bold">Playlist pública</p>
+          <p className="text-[10px] font-bold">Playlist pública</p>
           <h1 className="my-2 truncate text-[28px] leading-none font-bold md:text-[64px]">
             {playlist.name}
           </h1>
           {playlist.description && (
-            <p className="text-texto-secundario mb-2 line-clamp-2 text-sm">
+            <p className="text-texto-secundario mb-2 line-clamp-2 text-[10px]">
               {playlist.description}
             </p>
           )}
@@ -194,11 +196,6 @@ export default function PlaylistPage() {
               {formatarMinutosTotais(playlist.duration)})
             </span>
           </div>
-          <p className="text-texto-secundario mt-1 text-[10px]">
-            Criada em {formatarData(playlist.createdAt)}
-            {playlist.updatedAt &&
-              ` • Última modificação em ${formatarData(playlist.updatedAt)}`}
-          </p>
         </div>
       </div>
 

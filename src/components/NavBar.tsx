@@ -5,7 +5,7 @@ import searchIcon from "../assets/icons/searchIcon.svg";
 import downloadIcon from "../assets/icons/downloadIcon.svg";
 import notificationIcon from "../assets/icons/notificationIcon.svg";
 import homeIcon from "../assets/icons/homeIcon.svg";
-import profilePicture from "../assets/profilePicture.jpg";
+import profilePicture from "../assets/profilePicture.png";
 
 export default function NavBar() {
   return (
@@ -22,7 +22,7 @@ export default function NavBar() {
         >
           <img src={homeIcon} alt="Home" />
         </Link>
-        <div className="bg-fundo-cards hidden h-9 w-[355px] items-center gap-1 rounded-2xl px-2 py-1 md:flex">
+        <div className="bg-fundo-cards hidden h-9 w-88.75 items-center gap-1 rounded-2xl px-2 py-1 md:flex">
           <img src={searchIcon} alt="Search" className="h-2.5 w-2.5" />
           <input
             placeholder="O que voce quer ouvir?"

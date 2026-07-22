@@ -63,17 +63,17 @@ const CardAcessoRapido = ({
 const CardPlaylist = ({ id, capa, titulo, artista }: CardPlaylistProps) => (
   <Link
     to={`/playlist/${id}`}
-    className="flex w-[76px] shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:w-[150px]"
+    className="flex w-19 shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:w-37.5"
   >
     {capa ? (
       <img
         src={capa}
         alt={titulo}
-        className="h-[60px] w-[60px] rounded-sm object-cover shadow-md md:aspect-square md:h-auto md:w-full"
+        className="h-15 w-15 rounded-sm object-cover shadow-md md:aspect-square md:h-auto md:w-full"
       />
     ) : (
       <div
-        className="h-[60px] w-[60px] rounded-sm bg-[#2a2a2a] shadow-md md:aspect-square md:h-auto md:w-full"
+        className="h-15 w-15 rounded-sm bg-[#2a2a2a] shadow-md md:aspect-square md:h-auto md:w-full"
         aria-hidden="true"
       />
     )}
@@ -85,17 +85,17 @@ const CardPlaylist = ({ id, capa, titulo, artista }: CardPlaylistProps) => (
 const CardAlbum = ({ id, capa, titulo, artista }: CardPlaylistProps) => (
   <Link
     to={`/album/${id}`}
-    className="flex w-[76px] shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:w-[150px]"
+    className="flex w-19 shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:w-37.5"
   >
     {capa ? (
       <img
         src={capa}
         alt={titulo}
-        className="h-[60px] w-[60px] rounded-sm object-cover shadow-md md:aspect-square md:h-auto md:w-full"
+        className="h-15 w-15 rounded-sm object-cover shadow-md md:aspect-square md:h-auto md:w-full"
       />
     ) : (
       <div
-        className="h-[60px] w-[60px] rounded-sm bg-[#2a2a2a] shadow-md md:aspect-square md:h-auto md:w-full"
+        className="h-15 w-15 rounded-sm bg-[#2a2a2a] shadow-md md:aspect-square md:h-auto md:w-full"
         aria-hidden="true"
       />
     )}
@@ -107,17 +107,17 @@ const CardAlbum = ({ id, capa, titulo, artista }: CardPlaylistProps) => (
 const CardArtista = ({ id, capa, nome }: CardArtistaProps) => (
   <Link
     to={`/artist/${id}`}
-    className="flex min-h-[104px] shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:min-h-[172px]"
+    className="flex min-h-26 shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:min-h-43"
   >
     {capa ? (
       <img
         src={capa}
         alt={nome}
-        className="h-[60px] w-[60px] rounded-full object-cover shadow-md md:h-33 md:w-33"
+        className="h-15 w-15 rounded-full object-cover shadow-md md:h-33 md:w-33"
       />
     ) : (
       <div
-        className="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[#2a2a2a] text-sm font-bold shadow-md md:h-33 md:w-33"
+        className="flex h-15 w-15 items-center justify-center rounded-full bg-[#2a2a2a] text-sm font-bold shadow-md md:h-33 md:w-33"
         aria-hidden="true"
       >
         {nome.charAt(0).toUpperCase()}

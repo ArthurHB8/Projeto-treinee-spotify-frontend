@@ -10,9 +10,11 @@ import {
   getUserPlaylists,
 } from "../api/user";
 import { usePlayer } from "../context/PlayerContext";
+
 import EstadoPagina from "../components/EstadoPagina";
 import MenuFaixa from "../components/MenuFaixa";
-import profilePicture from "../assets/profilePicture.jpg";
+import profilePicture from "../assets/profilePicture.png";
+
 import type { Album, Artist, Music, PlaylistNoMusic } from "../api/types";
 import type { FaixaFila } from "../types";
 
@@ -94,16 +96,16 @@ export default function ProfilePage() {
   }));
 
   return (
-    <div className="max-h-[calc(100vh-63px)] min-w-0 flex-1 overflow-y-auto rounded-lg bg-[#121212] pb-[88px] text-white">
-      <div className="flex flex-col items-start gap-4 bg-gradient-to-b from-[#5f5f5f] to-[#121212] p-4 xl:flex-row xl:items-end xl:gap-6 xl:p-6">
+    <div className="min-w-0 flex-1 overflow-y-auto rounded-lg bg-[#121212] pb-22 text-white">
+      <div className="flex flex-row items-center gap-4 bg-linear-to-b from-[#938D8E] to-[#3E3939] pt-10 pr-10 pb-4 pl-5 xl:items-center xl:gap-6 xl:p-6">
         <img
           src={profilePicture}
           alt={NOME_USUARIO}
-          className="h-[120px] w-[120px] shrink-0 rounded-full object-cover shadow-2xl xl:h-[192px] xl:w-[192px]"
+          className="h-15 w-15 shrink-0 rounded-full object-cover shadow-2xl xl:h-48 xl:w-48"
         />
         <div className="min-w-0">
-          <p className="text-xs font-bold">Perfil</p>
-          <h1 className="my-2 truncate text-[28px] leading-none font-black xl:text-[64px]">
+          <p className="text-[10px] font-bold">Perfil</p>
+          <h1 className="my-2 truncate text-[18px] leading-none font-black xl:text-[64px]">
             {NOME_USUARIO}
           </h1>
           <p className="text-texto-secundario text-[10px]">
@@ -116,9 +118,10 @@ export default function ProfilePage() {
         <h2 className="text-[16px] font-bold">
           Artistas mais tocados este mês
         </h2>
-        <p className="text-texto-secundario mb-4 text-xs">
+        <p className="text-texto-secundario mb-4 text-[10px]">
           Visíveis apenas para você
         </p>
+
         <div className="flex gap-4 overflow-x-auto pb-1">
           {artistas.map((artista) => {
             const capa = resolveImageUrl(artista.imageUrl);
@@ -126,22 +129,24 @@ export default function ProfilePage() {
               <Link
                 key={artista.id}
                 to={`/artist/${artista.id}`}
-                className="flex w-[120px] shrink-0 flex-col gap-2 rounded-sm p-1.5 text-inherit no-underline hover:bg-white/5"
+                className="flex shrink-0 flex-col gap-2 rounded-sm p-1.5 text-inherit no-underline hover:bg-white/5"
               >
                 {capa ? (
                   <img
                     src={capa}
                     alt={artista.name}
-                    className="aspect-square w-full rounded-full object-cover shadow-md"
+                    className="aspect-square w-15 rounded-full object-cover shadow-md xl:w-33"
                   />
                 ) : (
                   <div
-                    className="aspect-square w-full rounded-full bg-[#2a2a2a]"
+                    className="aspect-square w-15 rounded-full bg-[#2a2a2a] xl:w-33"
                     aria-hidden="true"
                   />
                 )}
                 <p className="truncate text-xs font-bold">{artista.name}</p>
-                <p className="text-texto-secundario text-[10px]">Artista</p>
+                <p className="text-texto-secundario hidden text-[10px] lg:block">
+                  Artista
+                </p>
               </Link>
             );
           })}
@@ -150,7 +155,7 @@ export default function ProfilePage() {
 
       <section className="mb-8 px-4 md:px-6">
         <h2 className="text-[16px] font-bold">Músicas mais tocadas este mês</h2>
-        <p className="text-texto-secundario mb-4 text-xs">
+        <p className="text-texto-secundario mb-4 text-[10px]">
           Visíveis apenas para você
         </p>
         <div className="flex flex-col">
@@ -177,7 +182,7 @@ export default function ProfilePage() {
                     <img
                       src={capa}
                       alt={musica.title}
-                      className="h-10 w-10 shrink-0 object-cover"
+                      className="h-9 w-9 shrink-0 object-cover"
                     />
                   ) : (
                     <div
@@ -206,26 +211,26 @@ export default function ProfilePage() {
         </div>
       </section>
 
-      <section className="px-4 pb-8 md:px-6">
+      <section className="px-4 md:px-6">
         <h2 className="mb-4 text-[16px] font-bold">Playlists públicas</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
+        <div className="flex gap-3 overflow-x-auto">
           {playlists.map((playlist) => {
             const capa = resolveImageUrl(playlist.imageUrl);
             return (
               <Link
                 key={playlist.id}
                 to={`/playlist/${playlist.id}`}
-                className="flex flex-col gap-2 rounded-sm p-2 text-inherit no-underline hover:bg-white/5"
+                className="flex shrink-0 flex-col items-start gap-2 rounded-sm text-inherit no-underline hover:bg-white/5"
               >
                 {capa ? (
                   <img
                     src={capa}
                     alt={playlist.name}
-                    className="aspect-square w-full rounded-sm object-cover shadow-md"
+                    className="aspect-square w-33 rounded-sm object-cover shadow-md"
                   />
                 ) : (
                   <div
-                    className="aspect-square w-full rounded-sm bg-[#2a2a2a]"
+                    className="aspect-square w-33 rounded-sm bg-[#2a2a2a]"
                     aria-hidden="true"
                   />
                 )}
