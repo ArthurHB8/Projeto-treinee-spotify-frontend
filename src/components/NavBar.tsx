@@ -9,7 +9,7 @@ import profilePicture from "../assets/profilePicture.jpg";
 
 export default function NavBar() {
   return (
-    <div className="text-texto-secundario fixed top-0 z-50 flex h-15 w-full items-center justify-between bg-black p-3">
+    <div className="text-texto-secundario flex h-15 w-full items-center justify-between bg-black p-3">
       <div className="hidden md:block">
         <img src={spotifyLogo} alt="Spotify Logo" />
       </div>
@@ -48,13 +48,16 @@ export default function NavBar() {
             alt="Notification"
             className="hidden h-3 w-3 md:block"
           />
-          <div className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full">
+          <Link
+            to="/profile"
+            className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full"
+          >
             <img
               src={profilePicture}
               alt="Profile"
               className="h-2/3 w-2/3 rounded-full"
             />
-          </div>
+          </Link>
         </div>
       </div>
     </div>
