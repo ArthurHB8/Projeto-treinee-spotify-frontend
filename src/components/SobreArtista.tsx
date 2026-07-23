@@ -4,9 +4,7 @@ import { Link } from "react-router-dom";
 import { getArtistById } from "../api/artist";
 import { resolveImageUrl } from "../api/client";
 import type { Artist } from "../api/types";
-
-const formatarOuvintes = (n: number) =>
-  new Intl.NumberFormat("pt-BR").format(n);
+import { formatarNumero as formatarOuvintes } from "../utils/formatarNumero";
 
 type SobreArtistaProps = {
   artistId: string;

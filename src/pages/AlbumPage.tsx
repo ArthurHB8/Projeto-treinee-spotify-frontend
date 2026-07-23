@@ -15,9 +15,7 @@ import type { Album, Music } from "../api/types";
 import type { FaixaFila } from "../types";
 import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
 import { formatarDuracao, formatarDuracaoTotal } from "../utils/formatarDuracao";
-
-const formatarReproducoes = (n: number) =>
-  new Intl.NumberFormat("pt-BR").format(n);
+import { formatarNumero as formatarReproducoes } from "../utils/formatarNumero";
 
 const IconeMais = () => (
   <svg

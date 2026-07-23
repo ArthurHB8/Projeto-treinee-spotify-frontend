@@ -19,11 +19,9 @@ import explicitIcon from "../assets/icons/explicitIcon.svg";
 import type { Album, Artist, Music, PlaylistNoMusic } from "../api/types";
 import type { FaixaFila } from "../types";
 import { formatarDuracao } from "../utils/formatarDuracao";
+import { formatarNumero as formatarReproducoes } from "../utils/formatarNumero";
 
 const NOME_USUARIO = "Vitoria Tenorio";
-
-const formatarReproducoes = (n: number) =>
-  new Intl.NumberFormat("pt-BR").format(n);
 
 export default function ProfilePage() {
   const { tocarFaixa } = usePlayer();

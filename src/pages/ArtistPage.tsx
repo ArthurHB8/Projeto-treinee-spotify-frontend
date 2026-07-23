@@ -23,9 +23,7 @@ import type { Album, Artist, Music } from "../api/types";
 import type { FaixaFila } from "../types";
 import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
 import { formatarDuracao } from "../utils/formatarDuracao";
-
-const formatarOuvintes = (n: number) =>
-  new Intl.NumberFormat("pt-BR").format(n);
+import { formatarNumero as formatarOuvintes } from "../utils/formatarNumero";
 
 type ArtistSongRow = {
   musica: Music;
