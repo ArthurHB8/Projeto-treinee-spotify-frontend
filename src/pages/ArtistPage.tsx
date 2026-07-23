@@ -22,15 +22,10 @@ import explicitIcon from "../assets/icons/explicitIcon.svg";
 import type { Album, Artist, Music } from "../api/types";
 import type { FaixaFila } from "../types";
 import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
+import { formatarDuracao } from "../utils/formatarDuracao";
 
 const formatarOuvintes = (n: number) =>
   new Intl.NumberFormat("pt-BR").format(n);
-
-const formatarDuracao = (segundos: number) => {
-  const minutos = Math.floor(segundos / 60);
-  const restante = segundos % 60;
-  return `${minutos}:${String(restante).padStart(2, "0")}`;
-};
 
 type ArtistSongRow = {
   musica: Music;

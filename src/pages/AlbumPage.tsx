@@ -14,20 +14,7 @@ import explicitIcon from "../assets/icons/explicitIcon.svg";
 import type { Album, Music } from "../api/types";
 import type { FaixaFila } from "../types";
 import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
-
-const formatarDuracao = (segundos: number) => {
-  const minutos = Math.floor(segundos / 60);
-  const restante = segundos % 60;
-  return `${minutos}:${String(restante).padStart(2, "0")}`;
-};
-
-const formatarDuracaoTotal = (segundos: number) => {
-  const horas = Math.floor(segundos / 3600);
-  const minutos = Math.floor((segundos % 3600) / 60);
-  return horas > 0
-    ? `${horas}h${String(minutos).padStart(2, "0")}min`
-    : `${minutos} min`;
-};
+import { formatarDuracao, formatarDuracaoTotal } from "../utils/formatarDuracao";
 
 const formatarReproducoes = (n: number) =>
   new Intl.NumberFormat("pt-BR").format(n);

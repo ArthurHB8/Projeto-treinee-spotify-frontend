@@ -18,17 +18,12 @@ import explicitIcon from "../assets/icons/explicitIcon.svg";
 
 import type { Album, Artist, Music, PlaylistNoMusic } from "../api/types";
 import type { FaixaFila } from "../types";
+import { formatarDuracao } from "../utils/formatarDuracao";
 
 const NOME_USUARIO = "Vitoria Tenorio";
 
 const formatarReproducoes = (n: number) =>
   new Intl.NumberFormat("pt-BR").format(n);
-
-const formatarDuracao = (segundos: number) => {
-  const minutos = Math.floor(segundos / 60);
-  const restante = segundos % 60;
-  return `${minutos}:${String(restante).padStart(2, "0")}`;
-};
 
 export default function ProfilePage() {
   const { tocarFaixa } = usePlayer();
