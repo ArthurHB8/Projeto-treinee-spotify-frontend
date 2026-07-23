@@ -228,6 +228,8 @@ export default function PlaylistPage() {
         reorderPlaylist(playlist.id, musicIds).catch(() =>
           recarregarAposRemocao(),
         );
+      } else {
+        recarregarAposRemocao();
       }
     },
   });
