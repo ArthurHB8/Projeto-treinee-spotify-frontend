@@ -5,7 +5,6 @@ import { useDragDropMonitor } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
 
 import { reorderPlaylist } from "../api/playlist";
-import { addMusicToPlaylist } from "../api/playlist";
 import { getAlbumById } from "../api/album";
 import { getArtistById } from "../api/artist";
 import { resolveImageUrl } from "../api/client";
@@ -20,6 +19,7 @@ import profilePicture from "../assets/profilePicture.png";
 
 import type { Album, Artist, Music, Playlist } from "../api/types";
 import type { FaixaFila } from "../types";
+import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
 
 const formatarDuracao = (segundos: number) => {
   const minutos = Math.floor(segundos / 60);
@@ -211,6 +211,8 @@ export default function PlaylistPage() {
 
   useDragDropMonitor({
     onDragOver(event) {
+      if (event.operation.target?.type !== "song") return;
+
       setPlaylist((atual) => {
         if (!atual) return atual;
         return { ...atual, musics: move(atual.musics, event) };
@@ -219,7 +221,6 @@ export default function PlaylistPage() {
 
     onDragEnd(event) {
       if (event.canceled || !playlist) return;
-      const musicIdSource = event.operation.source?.id as string;
 
       if (event.operation.target?.type === "song") {
         const musicIds = playlist.musics.map((musica) => musica.id);
@@ -227,19 +228,10 @@ export default function PlaylistPage() {
         reorderPlaylist(playlist.id, musicIds).catch(() =>
           recarregarAposRemocao(),
         );
-      } else if (event.operation.target?.type === "playlist") {
-        const targetPlaylist = (
-          event.operation.target.data as {
-            playlistId: string;
-          }
-        ).playlistId;
-
-        if (targetPlaylist === playlist.id) return;
-
-        addMusicToPlaylist(targetPlaylist, musicIdSource);
       }
     },
   });
+  useAdicionarMusicaPlaylist(playlist?.id);
 
   if (carregando) return <EstadoPagina>Carregando playlist...</EstadoPagina>;
   if (erro)

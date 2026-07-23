@@ -19,12 +19,15 @@ export default function LibraryItem({
 }: LibraryItemProps) {
   const arredondado = tipo === "artista" ? "rounded-full" : "rounded-xs";
 
-  const { ref, isDropTarget } = useDroppable<{ playlistId: string }>({
+  const { ref, isDropTarget } = useDroppable<{
+    playlistId: string;
+    titulo: string;
+  }>({
     id: `library-playlist-${id}`,
     type: "playlist",
     accept: "song",
     disabled: tipo !== "Playlist",
-    data: { playlistId: id },
+    data: { playlistId: id, titulo },
   });
 
   return (

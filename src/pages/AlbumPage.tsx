@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDraggable } from "@dnd-kit/react";
-import { useDragDropMonitor } from "@dnd-kit/react";
 
-import { addMusicToPlaylist } from "../api/playlist";
 import { getAlbumById } from "../api/album";
 import { resolveImageUrl } from "../api/client";
 import { usePlayer } from "../context/PlayerContext";
@@ -13,6 +11,7 @@ import pauseIcon from "../assets/icons/pauseIcon.svg";
 import playIcon from "../assets/icons/playIcon.svg";
 import type { Album, Music } from "../api/types";
 import type { FaixaFila } from "../types";
+import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
 
 const formatarDuracao = (segundos: number) => {
   const minutos = Math.floor(segundos / 60);
@@ -137,22 +136,7 @@ export default function AlbumPage() {
       .finally(() => setCarregando(false));
   }, [id]);
 
-  useDragDropMonitor({
-    onDragEnd(event) {
-      if (event.canceled) return;
-      const musicIdSource = event.operation.source?.id as string;
-
-      if (event.operation.target?.type === "playlist") {
-        const targetPlaylist = (
-          event.operation.target.data as {
-            playlistId: string;
-          }
-        ).playlistId;
-
-        addMusicToPlaylist(targetPlaylist, musicIdSource);
-      }
-    },
-  });
+  useAdicionarMusicaPlaylist();
 
   if (carregando) return <EstadoPagina>Carregando álbum...</EstadoPagina>;
   if (erro)

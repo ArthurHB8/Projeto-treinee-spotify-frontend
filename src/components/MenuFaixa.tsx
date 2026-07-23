@@ -96,7 +96,7 @@ export default function MenuFaixa({
     <div
       ref={ref}
       style={{ top: y, left: x, maxHeight: `calc(100vh - ${y}px - 80px)` }}
-      className="fixed z-[60] min-w-[220px] overflow-y-auto rounded-md bg-[#282828] py-1 text-white shadow-xl"
+      className="fixed z-60 min-w-55 overflow-y-auto rounded-md bg-[#282828] py-1 text-white shadow-xl"
     >
       {mostrandoPlaylists ? (
         <>
