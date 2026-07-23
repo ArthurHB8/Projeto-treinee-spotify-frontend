@@ -8,13 +8,17 @@ import {
   getPopularMusicsByArtistId,
 } from "../api/artist";
 import { resolveImageUrl } from "../api/client";
+import { addMusicToPlaylist } from "../api/playlist";
+import { getUserPlaylists } from "../api/user";
 import { usePlayer } from "../context/PlayerContext";
 import MenuFaixa from "../components/MenuFaixa";
 import EstadoPagina from "../components/EstadoPagina";
 import verifiedIcon from "../assets/icons/verifiedIcon.svg";
 import inLibraryIcon from "../assets/icons/inLibraryIcon.svg";
+import addLikedSongsIcon from "../assets/icons/addLikedSongs.svg";
 import playIcon from "../assets/icons/playIcon.svg";
 import pauseIcon from "../assets/icons/pauseIcon.svg";
+import explicitIcon from "../assets/icons/explicitIcon.svg";
 import type { Album, Artist, Music } from "../api/types";
 import type { FaixaFila } from "../types";
 import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
@@ -34,6 +38,7 @@ type ArtistSongRow = {
   capaMusica: string | null;
   aoTocar: () => void;
   aoAbrirMenu: (e: React.MouseEvent) => void;
+  aoAdicionarCurtida: () => void;
 };
 
 const ArtistSong = ({
@@ -42,6 +47,7 @@ const ArtistSong = ({
   capaMusica,
   aoTocar,
   aoAbrirMenu,
+  aoAdicionarCurtida,
 }: ArtistSongRow) => {
   const { ref } = useDraggable({ id: musica.id, type: "song" });
 
@@ -53,41 +59,54 @@ const ArtistSong = ({
         e.preventDefault();
         aoAbrirMenu(e);
       }}
-      className="grid cursor-pointer grid-cols-[24px_1fr_auto] items-center gap-2.5 rounded-sm px-2 py-2 hover:bg-white/10"
+      className="grid cursor-pointer grid-cols-[24px_40px_minmax(0,1fr)_auto_auto_auto] items-center gap-2.5 rounded-sm px-2 py-2 hover:bg-white/10"
     >
       <span className="text-texto-secundario text-center text-sm">
         {index + 1}
       </span>
-      <div className="flex min-w-0 items-center gap-3">
-        {capaMusica ? (
+      {capaMusica ? (
+        <img
+          src={capaMusica}
+          alt={musica.title}
+          className="h-10 w-10 shrink-0 object-cover"
+        />
+      ) : (
+        <div className="h-10 w-10 shrink-0 bg-[#2a2a2a]" aria-hidden="true" />
+      )}
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium">{musica.title}</p>
+        {musica.explicit && (
           <img
-            src={capaMusica}
-            alt={musica.title}
-            className="h-10 w-10 shrink-0 object-cover"
-          />
-        ) : (
-          <div className="h-10 w-10 shrink-0 bg-[#2a2a2a]" aria-hidden="true" />
-        )}
-        <div className="min-w-0">
-          <p className="truncate text-sm font-medium">{musica.title}</p>
-          {musica.explicit && (
-            <span className="bg-texto-secundario mt-0.5 inline-block rounded-xs px-1 text-[9px] leading-tight font-bold text-black">
-              E
-            </span>
-          )}
-        </div>
-      </div>
-      <div className="text-texto-secundario flex items-center gap-2.5 text-xs">
-        <span>{formatarOuvintes(musica.timesListen)}</span>
-        {musica.playlistsId.length > 0 && (
-          <img
-            src={inLibraryIcon}
-            alt="Na sua biblioteca"
-            className="h-3.5 w-3.5"
+            src={explicitIcon}
+            alt="Explícito"
+            className="mt-0.5 h-3.5 w-3.5"
           />
         )}
-        <span>{formatarDuracao(musica.duration)}</span>
       </div>
+      <span className="text-texto-secundario text-xs">
+        {formatarOuvintes(musica.timesListen)}
+      </span>
+      {musica.playlistsId.length > 0 ? (
+        <img
+          src={inLibraryIcon}
+          alt="Na sua biblioteca"
+          className="h-3.5 w-3.5"
+        />
+      ) : (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            aoAdicionarCurtida();
+          }}
+          aria-label="Adicionar a Músicas Curtidas"
+          className="cursor-pointer"
+        >
+          <img src={addLikedSongsIcon} alt="" className="h-3.5 w-3.5" />
+        </button>
+      )}
+      <span className="text-texto-secundario text-xs">
+        {formatarDuracao(musica.duration)}
+      </span>
     </div>
   );
 };
@@ -128,6 +147,25 @@ export default function ArtistPage() {
   }, [id]);
 
   useAdicionarMusicaPlaylist();
+
+  const adicionarMusicaCurtida = (musica: Music) => {
+    getUserPlaylists().then((playlists) => {
+      const playlistCurtidas = playlists.find(
+        (p) => p.name === "Músicas Curtidas",
+      );
+      if (!playlistCurtidas) return;
+
+      addMusicToPlaylist(playlistCurtidas.id, musica.id).then(() => {
+        setMusicasPopulares((atual) =>
+          atual.map((m) =>
+            m.id === musica.id
+              ? { ...m, playlistsId: [...m.playlistsId, playlistCurtidas.id] }
+              : m,
+          ),
+        );
+      });
+    });
+  };
 
   if (carregando) return <EstadoPagina>Carregando artista...</EstadoPagina>;
   if (erro)
@@ -209,7 +247,7 @@ export default function ArtistPage() {
         </button>
       </div>
 
-      <section className="mb-8 px-4 md:px-6">
+      <section className="mb-8 max-w-[520px] px-4 md:px-6">
         <h2 className="mb-4 text-[16px] font-bold">Populares</h2>
         <div className="flex flex-col">
           {musicasPopulares.map((musica, index) => (
@@ -222,6 +260,7 @@ export default function ArtistPage() {
               aoAbrirMenu={(e) =>
                 setMenuFaixa({ musica, x: e.clientX, y: e.clientY })
               }
+              aoAdicionarCurtida={() => adicionarMusicaCurtida(musica)}
             />
           ))}
         </div>

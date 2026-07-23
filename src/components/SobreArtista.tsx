@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { getArtistById } from "../api/artist";
 import { resolveImageUrl } from "../api/client";
@@ -58,7 +59,14 @@ export default function SobreArtista({ artistId }: SobreArtistaProps) {
       </div>
 
       <div>
-        <h2 className="p-3 text-xs">{artista.name}</h2>
+        <h2 className="p-3 text-xs">
+          <Link
+            to={`/artist/${artista.id}`}
+            className="text-inherit no-underline hover:underline"
+          >
+            {artista.name}
+          </Link>
+        </h2>
         <div className="flex items-center justify-between px-3">
           <p className="text-texto-secundario text-[11px]">
             {formatarOuvintes(artista.listeners)} ouvintes mensais

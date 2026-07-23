@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { addMusicToPlaylist, removeMusicFromPlaylist } from "../api/playlist";
@@ -40,6 +40,22 @@ export default function MenuFaixa({
   const ref = useRef<HTMLDivElement>(null);
   const [mostrandoPlaylists, setMostrandoPlaylists] = useState(false);
   const [playlists, setPlaylists] = useState<PlaylistNoMusic[] | null>(null);
+  const [posicao, setPosicao] = useState({ top: y, left: x });
+
+  useLayoutEffect(() => {
+    const elemento = ref.current;
+    if (!elemento) return;
+
+    const { offsetWidth: largura, offsetHeight: altura } = elemento;
+    const margem = 8;
+
+    const top =
+      y + altura > window.innerHeight ? Math.max(margem, y - altura) : y;
+    const left =
+      x + largura > window.innerWidth ? Math.max(margem, x - largura) : x;
+
+    setPosicao({ top, left });
+  }, [x, y, mostrandoPlaylists, playlists]);
 
   useEffect(() => {
     const aoClicarFora = (e: MouseEvent) => {
@@ -95,7 +111,11 @@ export default function MenuFaixa({
   return (
     <div
       ref={ref}
-      style={{ top: y, left: x, maxHeight: `calc(100vh - ${y}px - 80px)` }}
+      style={{
+        top: posicao.top,
+        left: posicao.left,
+        maxHeight: "calc(100vh - 16px)",
+      }}
       className="fixed z-60 min-w-55 overflow-y-auto rounded-md bg-[#282828] py-1 text-white shadow-xl"
     >
       {mostrandoPlaylists ? (

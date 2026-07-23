@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import { usePlayer } from "../context/PlayerContext";
 import { resolveImageUrl } from "../api/client";
 import SobreArtista from "./SobreArtista";
@@ -26,7 +28,12 @@ export default function SongPanel() {
 
       <div>
         <h2 className="text-[20px] font-bold">{titulo}</h2>
-        <p className="text-texto-secundario text-[12px]">{artista}</p>
+        <Link
+          to={`/artist/${faixaAtual.musica.artistId}`}
+          className="text-texto-secundario block text-[12px] text-inherit no-underline hover:underline"
+        >
+          {artista}
+        </Link>
       </div>
 
       {faixaAtual && <SobreArtista artistId={faixaAtual.musica.artistId} />}

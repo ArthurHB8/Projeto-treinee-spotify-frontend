@@ -9,6 +9,8 @@ import MenuFaixa from "../components/MenuFaixa";
 import EstadoPagina from "../components/EstadoPagina";
 import pauseIcon from "../assets/icons/pauseIcon.svg";
 import playIcon from "../assets/icons/playIcon.svg";
+import clockIcon from "../assets/icons/clockIcon.svg";
+import explicitIcon from "../assets/icons/explicitIcon.svg";
 import type { Album, Music } from "../api/types";
 import type { FaixaFila } from "../types";
 import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
@@ -29,24 +31,6 @@ const formatarDuracaoTotal = (segundos: number) => {
 
 const formatarReproducoes = (n: number) =>
   new Intl.NumberFormat("pt-BR").format(n);
-
-const IconeRelogio = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    aria-hidden="true"
-  >
-    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
-    <path
-      d="M12 7v5l3 3"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-  </svg>
-);
 
 const IconeMais = () => (
   <svg
@@ -86,9 +70,11 @@ const AlbumSongs = ({ musica, index, aoTocar, aoAbrirMenu }: AlbumSongRows) => {
       <div className="flex min-w-0 items-center gap-2">
         <p className="truncate font-medium">{musica.title}</p>
         {musica.explicit && (
-          <span className="bg-texto-secundario shrink-0 rounded-xs px-1 text-[9px] leading-tight font-bold text-black">
-            E
-          </span>
+          <img
+            src={explicitIcon}
+            alt="Explícito"
+            className="h-3.5 w-3.5 shrink-0"
+          />
         )}
       </div>
       <span className="text-texto-secundario hidden xl:block">
@@ -226,7 +212,7 @@ export default function AlbumPage() {
           <span>Título</span>
           <span className="hidden xl:block">Reproduções</span>
           <span className="hidden justify-center xl:flex">
-            <IconeRelogio />
+            <img src={clockIcon} alt="Duração" className="h-3.5 w-3.5" />
           </span>
         </div>
 

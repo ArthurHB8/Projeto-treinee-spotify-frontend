@@ -1,10 +1,11 @@
 import LibraryItem from "./LibraryItem";
-import CriarPlaylistModal from "./CriarPlaylistModal";
+import PlaylistModal from "./PlaylistModal";
 
 import searchIcon from "../assets/icons/searchIcon.svg";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useBiblioteca } from "../context/BibliotecaContext";
 import {
   getUserPlaylists,
   getUserRecentAlbums,
@@ -34,6 +35,7 @@ const BotaoFiltro = ({ texto, ativo, onClick }: BotaoFiltroProps) => {
 
 export default function Library() {
   const navigate = useNavigate();
+  const { versaoBiblioteca, invalidarBiblioteca } = useBiblioteca();
 
   const [itens, setItens] = useState<BibliotecaItem[]>([]);
   const [carregando, setCarregando] = useState(true);
@@ -89,7 +91,7 @@ export default function Library() {
       .finally(() => setCarregando(false));
   };
 
-  useEffect(carregarBiblioteca, []);
+  useEffect(carregarBiblioteca, [versaoBiblioteca]);
 
   const itensFiltrados = ordenarItensBiblioteca(itens).filter((item) => {
     return (
@@ -176,11 +178,11 @@ export default function Library() {
       )}
 
       {criandoPlaylist && (
-        <CriarPlaylistModal
+        <PlaylistModal
           onFechar={() => setCriandoPlaylist(false)}
-          onCriada={(playlist) => {
+          onSalva={(playlist) => {
             setCriandoPlaylist(false);
-            carregarBiblioteca();
+            invalidarBiblioteca();
             navigate(`/playlist/${playlist.id}`);
           }}
         />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { useDragDropMonitor } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
@@ -10,11 +10,14 @@ import { getArtistById } from "../api/artist";
 import { resolveImageUrl } from "../api/client";
 import { getPlaylistById } from "../api/playlist";
 import { usePlayer } from "../context/PlayerContext";
+import { useBiblioteca } from "../context/BibliotecaContext";
 
 import MenuFaixa from "../components/MenuFaixa";
+import PlaylistModal from "../components/PlaylistModal";
 import EstadoPagina from "../components/EstadoPagina";
 import pauseIcon from "../assets/icons/pauseIcon.svg";
 import playIcon from "../assets/icons/playIcon.svg";
+import clockIcon from "../assets/icons/clockIcon.svg";
 import profilePicture from "../assets/profilePicture.png";
 
 import type { Album, Artist, Music, Playlist } from "../api/types";
@@ -44,24 +47,6 @@ const formatarData = (iso: string) =>
 
 const formatarMinutosTotais = (segundos: number) =>
   `${Math.round(segundos / 60)} min`;
-
-const IconeRelogio = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    aria-hidden="true"
-  >
-    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
-    <path
-      d="M12 7v5l3 3"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-  </svg>
-);
 
 const IconeMais = () => (
   <svg
@@ -157,9 +142,12 @@ const PlaylistRow = ({
 
 export default function PlaylistPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { invalidarBiblioteca } = useBiblioteca();
   const { faixaAtual, tocando, tocarFaixa, alternarPlayPause } = usePlayer();
 
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
+  const [editando, setEditando] = useState(false);
   const [albunsPorId, setAlbunsPorId] = useState<Map<string, Album>>(new Map());
   const [artistasPorId, setArtistasPorId] = useState<Map<string, Artist>>(
     new Map(),
@@ -272,19 +260,23 @@ export default function PlaylistPage() {
           <img
             src={capaPlaylist}
             alt={playlist.name}
-            className="h-30 w-30 shrink-0 object-cover md:h-[174px] md:w-[174px]"
+            onClick={() => setEditando(true)}
+            className="h-30 w-30 shrink-0 cursor-pointer object-cover transition hover:brightness-75 md:h-[174px] md:w-[174px]"
           />
         ) : (
           <div
-            className="flex h-[120px] w-[120px] shrink-0 items-center justify-center bg-[#2a2a2a] text-4xl font-bold md:h-[174px] md:w-[174px] md:text-6xl"
-            aria-hidden="true"
+            onClick={() => setEditando(true)}
+            className="flex h-[120px] w-[120px] shrink-0 cursor-pointer items-center justify-center bg-[#2a2a2a] text-4xl font-bold transition hover:brightness-75 md:h-[174px] md:w-[174px] md:text-6xl"
           >
             {playlist.name.charAt(0).toUpperCase()}
           </div>
         )}
         <div className="min-w-0">
           <p className="text-[10px] font-bold">Playlist pública</p>
-          <h1 className="my-2 truncate text-[28px] leading-none font-bold md:text-[64px]">
+          <h1
+            onClick={() => setEditando(true)}
+            className="my-2 w-fit cursor-pointer truncate text-[28px] leading-none font-bold hover:underline md:text-[64px]"
+          >
             {playlist.name}
           </h1>
           {playlist.description && (
@@ -330,7 +322,7 @@ export default function PlaylistPage() {
           <span className="hidden md:block">Álbum</span>
           <span className="hidden md:block">Adicionada em</span>
           <span className="hidden justify-center md:flex">
-            <IconeRelogio />
+            <img src={clockIcon} alt="Duração" className="h-3.5 w-3.5" />
           </span>
         </div>
 
@@ -358,6 +350,24 @@ export default function PlaylistPage() {
           playlistIdAtual={playlist.id}
           onFechar={() => setMenuFaixa(null)}
           onFaixaRemovida={recarregarAposRemocao}
+        />
+      )}
+
+      {editando && (
+        <PlaylistModal
+          playlist={playlist}
+          onFechar={() => setEditando(false)}
+          onSalva={(playlistAtualizada) => {
+            setPlaylist((atual) =>
+              atual ? { ...atual, ...playlistAtualizada } : atual,
+            );
+            setEditando(false);
+            invalidarBiblioteca();
+          }}
+          onExcluida={() => {
+            invalidarBiblioteca();
+            navigate("/");
+          }}
         />
       )}
     </div>

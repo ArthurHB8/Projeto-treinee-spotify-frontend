@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { getArtistById } from "../api/artist";
 import type { Artist } from "../api/types";
@@ -31,7 +32,14 @@ export default function Creditos({ artistId }: CreditosTipo) {
 
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <h3 className="text-xs">{artista.name}</h3>
+          <h3 className="text-xs">
+          <Link
+            to={`/artist/${artista.id}`}
+            className="text-inherit no-underline hover:underline"
+          >
+            {artista.name}
+          </Link>
+        </h3>
           <p className="text-texto-secundario text-[10px]">Artista principal</p>
         </div>
         <button className="cursor-pointer rounded-2xl border border-[#7c7c7c] px-3 py-1.5 text-[10px]">
@@ -40,14 +48,28 @@ export default function Creditos({ artistId }: CreditosTipo) {
       </div>
 
       <div className="mb-3">
-        <h3 className="text-xs">{artista.name}</h3>
+        <h3 className="text-xs">
+          <Link
+            to={`/artist/${artista.id}`}
+            className="text-inherit no-underline hover:underline"
+          >
+            {artista.name}
+          </Link>
+        </h3>
         <p className="text-texto-secundario text-[10px]">
           Arranjos • Autores • Letrista
         </p>
       </div>
 
       <div>
-        <h3 className="text-xs">{artista.name}</h3>
+        <h3 className="text-xs">
+          <Link
+            to={`/artist/${artista.id}`}
+            className="text-inherit no-underline hover:underline"
+          >
+            {artista.name}
+          </Link>
+        </h3>
         <p className="text-texto-secundario text-[10px]">
           Arranjos • Autores • Letrista
         </p>

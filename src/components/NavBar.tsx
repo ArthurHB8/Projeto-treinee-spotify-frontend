@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import spotifyLogo from "../assets/icons/spotifyIcon.svg";
 import searchIcon from "../assets/icons/searchIcon.svg";
 import downloadIcon from "../assets/icons/downloadIcon.svg";
 import notificationIcon from "../assets/icons/notificationIcon.svg";
 import homeIcon from "../assets/icons/homeIcon.svg";
+import isHomeIcon from "../assets/icons/isHomeIcon.svg";
 import profilePicture from "../assets/profilePicture.png";
 
 export default function NavBar() {
@@ -16,12 +17,15 @@ export default function NavBar() {
 
       {/* Search Links */}
       <div className="flex items-center gap-1">
-        <Link
+        <NavLink
           to="/"
+          end
           className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full"
         >
-          <img src={homeIcon} alt="Home" />
-        </Link>
+          {({ isActive }) => (
+            <img src={isActive ? isHomeIcon : homeIcon} alt="Home" />
+          )}
+        </NavLink>
         <div className="bg-fundo-cards hidden h-9 w-88.75 items-center gap-1 rounded-2xl px-2 py-1 md:flex">
           <img src={searchIcon} alt="Search" className="h-2.5 w-2.5" />
           <input

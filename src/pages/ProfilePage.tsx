@@ -14,6 +14,7 @@ import { usePlayer } from "../context/PlayerContext";
 import EstadoPagina from "../components/EstadoPagina";
 import MenuFaixa from "../components/MenuFaixa";
 import profilePicture from "../assets/profilePicture.png";
+import explicitIcon from "../assets/icons/explicitIcon.svg";
 
 import type { Album, Artist, Music, PlaylistNoMusic } from "../api/types";
 import type { FaixaFila } from "../types";
@@ -195,9 +196,11 @@ export default function ProfilePage() {
                       {musica.title}
                     </p>
                     {musica.explicit && (
-                      <span className="bg-texto-secundario mt-0.5 inline-block rounded-xs px-1 text-[9px] leading-tight font-bold text-black">
-                        E
-                      </span>
+                      <img
+                        src={explicitIcon}
+                        alt="Explícito"
+                        className="mt-0.5 h-3.5 w-3.5"
+                      />
                     )}
                   </div>
                 </div>
