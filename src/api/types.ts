@@ -59,3 +59,10 @@ export type PutPlaylistPayload = {
   name: string;
   description: string;
 };
+
+export type SearchResults = {
+  musics: Music[];
+  playlists: PlaylistNoMusic[];
+  artists: Artist[];
+  albums: AlbumNoMusics[];
+};
