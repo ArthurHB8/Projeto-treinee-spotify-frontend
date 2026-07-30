@@ -9,7 +9,7 @@ export default function TocandoAgoraMobile() {
   const capa = resolveImageUrl(faixaAtual.capa);
 
   return (
-    <div className="fixed inset-x-0 top-15 bottom-32 z-40 flex items-center justify-center bg-gradient-to-b from-[#5f5f5f] to-[#121212] p-8 md:hidden">
+    <div className="fixed inset-x-0 top-15 bottom-32 z-40 flex items-center justify-center bg-linear-to-b from-[#5f5f5f] to-[#121212] p-8 md:hidden">
       {capa ? (
         <img
           src={capa}

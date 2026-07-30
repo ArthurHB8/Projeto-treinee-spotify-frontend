@@ -23,7 +23,10 @@ import profilePicture from "../assets/profilePicture.png";
 import type { Album, Artist, Music, Playlist } from "../api/types";
 import type { FaixaFila } from "../types";
 import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
-import { formatarDuracao, formatarDuracaoTotal } from "../utils/formatarDuracao";
+import {
+  formatarDuracao,
+  formatarDuracaoTotal,
+} from "../utils/formatarDuracao";
 
 const formatarData = (iso: string) =>
   new Intl.DateTimeFormat("pt-BR", {
@@ -258,11 +261,11 @@ export default function PlaylistPage() {
             {playlist.name.charAt(0).toUpperCase()}
           </div>
         )}
-        <div className="min-w-0">
+        <div className="@container w-full min-w-0 flex-1">
           <p className="text-[10px] font-bold">Playlist pública</p>
           <h1
             onClick={() => setEditando(true)}
-            className="my-2 w-fit cursor-pointer truncate text-[28px] leading-none font-bold hover:underline md:text-[64px]"
+            className="my-2 w-full cursor-pointer truncate text-[clamp(1.75rem,10cqw,4rem)] leading-none font-bold hover:underline"
           >
             {playlist.name}
           </h1>

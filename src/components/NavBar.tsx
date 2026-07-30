@@ -7,8 +7,31 @@ import notificationIcon from "../assets/icons/notificationIcon.svg";
 import homeIcon from "../assets/icons/homeIcon.svg";
 import isHomeIcon from "../assets/icons/isHomeIcon.svg";
 import profilePicture from "../assets/profilePicture.png";
+import { useEffect, useRef, useState } from "react";
+import SearchPanel from "./SearchPanel";
 
 export default function NavBar() {
+  const [query, setQuery] = useState<string>("");
+  const [painelAberto, setPainelAberto] = useState(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const aoClicarFora = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setPainelAberto(false);
+    };
+    const aoPressionarTecla = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPainelAberto(false);
+    };
+
+    document.addEventListener("mousedown", aoClicarFora);
+    document.addEventListener("keydown", aoPressionarTecla);
+    return () => {
+      document.removeEventListener("mousedown", aoClicarFora);
+      document.removeEventListener("keydown", aoPressionarTecla);
+    };
+  }, [setPainelAberto]);
+
   return (
     <div className="text-texto-secundario flex h-15 w-full items-center justify-between bg-black p-3">
       <div className="hidden md:block">
@@ -16,29 +39,42 @@ export default function NavBar() {
       </div>
 
       {/* Search Links */}
-      <div className="flex items-center gap-1">
-        <NavLink
-          to="/"
-          end
-          className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full"
-        >
-          {({ isActive }) => (
-            <img src={isActive ? isHomeIcon : homeIcon} alt="Home" />
-          )}
-        </NavLink>
-        <div className="bg-fundo-cards hidden h-9 w-88.75 items-center gap-1 rounded-2xl px-2 py-1 md:flex">
-          <img src={searchIcon} alt="Search" className="h-2.5 w-2.5" />
-          <input
-            placeholder="O que voce quer ouvir?"
-            className="w-full rounded-sm bg-transparent text-[10px] outline-none placeholder:text-[#B3B3B3]"
-          />
+      <div className="relative" ref={ref}>
+        <div className="flex items-center gap-1">
+          <NavLink
+            to="/"
+            end
+            className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full"
+          >
+            {({ isActive }) => (
+              <img src={isActive ? isHomeIcon : homeIcon} alt="Home" />
+            )}
+          </NavLink>
+          <div className="bg-fundo-cards relative hidden h-9 w-88.75 items-center gap-1 rounded-2xl px-2 py-1 md:flex">
+            <img src={searchIcon} alt="Search" className="h-2.5 w-2.5" />
+            <input
+              placeholder="O que voce quer ouvir?"
+              className="w-full rounded-sm bg-transparent text-[10px] outline-none placeholder:text-[#B3B3B3]"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => setPainelAberto(true)}
+            />
+            {painelAberto && (
+              <div className="absolute top-full left-0 z-60 w-full">
+                <SearchPanel
+                  query={query}
+                  onFechar={() => setPainelAberto(false)}
+                />
+              </div>
+            )}
+          </div>
+          <button
+            className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full md:hidden"
+            aria-label="Buscar"
+          >
+            <img src={searchIcon} alt="" className="h-3.5 w-3.5" />
+          </button>
         </div>
-        <button
-          className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full md:hidden"
-          aria-label="Buscar"
-        >
-          <img src={searchIcon} alt="" className="h-3.5 w-3.5" />
-        </button>
       </div>
 
       <div className="flex items-center gap-4">

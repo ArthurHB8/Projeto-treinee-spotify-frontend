@@ -30,7 +30,7 @@ export default function SongPanel() {
         <h2 className="text-[20px] font-bold">{titulo}</h2>
         <Link
           to={`/artist/${faixaAtual.musica.artistId}`}
-          className="text-texto-secundario block text-[12px] text-inherit no-underline hover:underline"
+          className="text-texto-secundario block text-[12px] no-underline hover:underline"
         >
           {artista}
         </Link>

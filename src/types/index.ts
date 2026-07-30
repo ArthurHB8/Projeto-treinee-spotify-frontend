@@ -66,3 +66,12 @@ export type EventoTurne = {
 export type FiltroMain = "Tudo" | "Música" | "Playlists";
 
 export type FiltroBiblioteca = "Tudo" | "Playlist" | "Álbum" | "artista";
+
+export type RecentSearchItem = {
+  id: string;
+  type: "artist" | "album" | "music" | "playlist";
+  label: string;
+  subtitle: string;
+  imageUrl: string | null;
+  albumId?: string;
+};
