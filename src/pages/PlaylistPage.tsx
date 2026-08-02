@@ -6,7 +6,6 @@ import { move } from "@dnd-kit/helpers";
 
 import { reorderPlaylist } from "../api/playlist";
 import { getAlbumById } from "../api/album";
-import { getArtistById } from "../api/artist";
 import { resolveImageUrl } from "../api/client";
 import { getPlaylistById } from "../api/playlist";
 import { usePlayer } from "../context/PlayerContext";
@@ -20,7 +19,7 @@ import playIcon from "../assets/icons/playIcon.svg";
 import clockIcon from "../assets/icons/clockIcon.svg";
 import profilePicture from "../assets/profilePicture.png";
 
-import type { Album, Artist, Music, Playlist } from "../api/types";
+import type { Album, Music, Playlist } from "../api/types";
 import type { FaixaFila } from "../types";
 import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
 import {
@@ -57,7 +56,6 @@ type PlaylistSongRow = {
   index: number;
   groupId: string;
   album?: Album;
-  artista?: Artist;
   aoTocar: () => void;
   aoAbrirMenu: (e: React.MouseEvent) => void;
 };
@@ -67,7 +65,6 @@ const PlaylistRow = ({
   index,
   groupId,
   album,
-  artista,
   aoTocar,
   aoAbrirMenu,
 }: PlaylistSongRow) => {
@@ -79,7 +76,7 @@ const PlaylistRow = ({
     accept: "song",
   });
 
-  const capaFaixa = resolveImageUrl(album?.imageUrl ?? null);
+  const capaFaixa = resolveImageUrl(musica.albumImageUrl);
 
   return (
     <div
@@ -104,7 +101,7 @@ const PlaylistRow = ({
         )}
         <div className="flex min-w-0 flex-col gap-1">
           <p className="truncate font-medium">{musica.title}</p>
-          <p className="text-texto-secundario truncate">{artista?.name}</p>
+          <p className="text-texto-secundario truncate">{musica.artistName}</p>
         </div>
       </div>
       <span className="text-texto-secundario hidden truncate md:block">
@@ -139,9 +136,6 @@ export default function PlaylistPage() {
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
   const [editando, setEditando] = useState(false);
   const [albunsPorId, setAlbunsPorId] = useState<Map<string, Album>>(new Map());
-  const [artistasPorId, setArtistasPorId] = useState<Map<string, Artist>>(
-    new Map(),
-  );
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
   const [menuFaixa, setMenuFaixa] = useState<{
@@ -163,19 +157,12 @@ export default function PlaylistPage() {
       const albumIds = [
         ...new Set(playlistResp.musics.map((musica) => musica.albumId)),
       ];
-      const artistIds = [
-        ...new Set(playlistResp.musics.map((musica) => musica.artistId)),
-      ];
 
-      const [albunsResp, artistasResp] = await Promise.all([
-        Promise.all(albumIds.map((albumId) => getAlbumById(albumId))),
-        Promise.all(artistIds.map((artistId) => getArtistById(artistId))),
-      ]);
+      const albunsResp = await Promise.all(
+        albumIds.map((albumId) => getAlbumById(albumId)),
+      );
 
       setAlbunsPorId(new Map(albunsResp.map((album) => [album.id, album])));
-      setArtistasPorId(
-        new Map(artistasResp.map((artista) => [artista.id, artista])),
-      );
     };
 
     carregar()
@@ -226,8 +213,8 @@ export default function PlaylistPage() {
 
   const filaPlaylist: FaixaFila[] = playlist.musics.map((musica) => ({
     musica,
-    capa: albunsPorId.get(musica.albumId)?.imageUrl ?? null,
-    nomeArtista: artistasPorId.get(musica.artistId)?.name ?? "",
+    capa: musica.albumImageUrl,
+    nomeArtista: musica.artistName,
   }));
 
   const faixaAtualEDestaPlaylist =
@@ -323,7 +310,6 @@ export default function PlaylistPage() {
             index={index}
             groupId={playlist.id}
             album={albunsPorId.get(musica.albumId)}
-            artista={artistasPorId.get(musica.artistId)}
             aoTocar={() => tocarFaixa(filaPlaylist, musica.id)}
             aoAbrirMenu={(e) =>
               setMenuFaixa({ musica, x: e.clientX, y: e.clientY })

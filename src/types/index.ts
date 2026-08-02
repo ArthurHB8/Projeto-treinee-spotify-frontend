@@ -45,12 +45,14 @@ export type CardPlaylistProps = {
   capa: string | null;
   titulo: string;
   artista: string;
+  onClick?: () => void;
 };
 
 export type CardArtistaProps = {
   id: string;
   capa: string | null;
   nome: string;
+  onClick?: () => void;
 };
 
 export type EventoTurne = {

@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 import spotifyLogo from "../assets/icons/spotifyIcon.svg";
 import searchIcon from "../assets/icons/searchIcon.svg";
@@ -13,6 +13,7 @@ import SearchPanel from "./SearchPanel";
 export default function NavBar() {
   const [query, setQuery] = useState<string>("");
   const [painelAberto, setPainelAberto] = useState(false);
+  const navigate = useNavigate();
 
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -58,6 +59,12 @@ export default function NavBar() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => setPainelAberto(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && query.trim()) {
+                  navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+                  setPainelAberto(false);
+                }
+              }}
             />
             {painelAberto && (
               <div className="absolute top-full left-0 z-60 w-full">
@@ -68,12 +75,13 @@ export default function NavBar() {
               </div>
             )}
           </div>
-          <button
+          <Link
+            to="/search"
             className="bg-fundo-cards flex h-9 w-9 items-center justify-center rounded-full md:hidden"
             aria-label="Buscar"
           >
             <img src={searchIcon} alt="" className="h-3.5 w-3.5" />
-          </button>
+          </Link>
         </div>
       </div>
 

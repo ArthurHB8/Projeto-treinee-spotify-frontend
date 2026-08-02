@@ -12,8 +12,7 @@ import { getAlbumById } from "../api/album";
 import { resolveImageUrl } from "../api/client";
 import { usePlayer } from "../context/PlayerContext";
 import type { FaixaFila, RecentSearchItem } from "../types";
-import playIcon from "../assets/icons/playIcon.svg";
-import removeIcon from "../assets/icons/deleteRecent.svg";
+import SearchResultRow from "./SearchResultRow";
 
 type SearchProps = {
   query: string;
@@ -89,58 +88,18 @@ export default function SearchPanel({ query, onFechar }: SearchProps) {
       {!debouncedQuery.trim() && (
         <div>
           <p className="px-2 py-1 text-[12px] font-bold">Buscas Recentes</p>
-          {recentSearches.map((item) => {
-            const capa = resolveImageUrl(item.imageUrl);
-            const arredondado =
-              item.type === "artist" ? "rounded-full" : "rounded-sm";
-
-            return (
-              <div
-                key={item.id}
-                className="group flex items-center gap-3 rounded-sm px-2 py-2 hover:bg-white/10"
-              >
-                <button
-                  onClick={() => aoClicarRecente(item)}
-                  className="flex min-w-0 flex-1 items-center gap-3 text-left"
-                >
-                  <div className="relative h-10 w-10 shrink-0">
-                    {capa ? (
-                      <img
-                        src={capa}
-                        alt={item.label}
-                        className={`h-10 w-10 object-cover ${arredondado}`}
-                      />
-                    ) : (
-                      <div
-                        className={`h-10 w-10 bg-[#2a2a2a] ${arredondado}`}
-                        aria-hidden="true"
-                      />
-                    )}
-                    {item.type === "music" && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                        <img src={playIcon} alt="" className="h-3 w-3 invert" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium">
-                      {item.label}
-                    </p>
-                    <p className="text-texto-secundario truncate text-xs">
-                      {item.subtitle}
-                    </p>
-                  </div>
-                </button>
-                <button
-                  onClick={() => removerRecente(item.id)}
-                  aria-label="Remover da busca recente"
-                  className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-                >
-                  <img src={removeIcon} alt="" className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            );
-          })}
+          {recentSearches.map((item) => (
+            <SearchResultRow
+              key={item.id}
+              imageUrl={resolveImageUrl(item.imageUrl)}
+              title={item.label}
+              subtitle={item.subtitle}
+              rounded={item.type === "artist"}
+              showPlayIcon={item.type === "music"}
+              onClick={() => aoClicarRecente(item)}
+              onRemove={() => removerRecente(item.id)}
+            />
+          ))}
         </div>
       )}
       {debouncedQuery.trim() && (
@@ -151,9 +110,16 @@ export default function SearchPanel({ query, onFechar }: SearchProps) {
             <p>{erro}</p>
           ) : (
             <div>
+              {!!searchResults?.artists.length && (
+                <p className="px-2 py-1 text-[12px] font-bold">Artistas</p>
+              )}
               {searchResults?.artists.map((artista) => (
-                <button
+                <SearchResultRow
                   key={artista.id}
+                  imageUrl={resolveImageUrl(artista.imageUrl)}
+                  title={artista.name}
+                  subtitle="Artista"
+                  rounded
                   onClick={() => {
                     registrarRecente({
                       id: artista.id,
@@ -165,13 +131,17 @@ export default function SearchPanel({ query, onFechar }: SearchProps) {
                     navigate(`/artist/${artista.id}`);
                     onFechar();
                   }}
-                >
-                  {artista.name}
-                </button>
+                />
               ))}
+              {!!searchResults?.albums.length && (
+                <p className="px-2 py-1 text-[12px] font-bold">Álbuns</p>
+              )}
               {searchResults?.albums.map((album) => (
-                <button
+                <SearchResultRow
                   key={album.id}
+                  imageUrl={resolveImageUrl(album.imageUrl)}
+                  title={album.title}
+                  subtitle={`Álbum • ${album.artistName}`}
                   onClick={() => {
                     registrarRecente({
                       id: album.id,
@@ -183,13 +153,17 @@ export default function SearchPanel({ query, onFechar }: SearchProps) {
                     navigate(`/album/${album.id}`);
                     onFechar();
                   }}
-                >
-                  {album.title}
-                </button>
+                />
               ))}
+              {!!searchResults?.playlists.length && (
+                <p className="px-2 py-1 text-[12px] font-bold">Playlists</p>
+              )}
               {searchResults?.playlists.map((playlist) => (
-                <button
+                <SearchResultRow
                   key={playlist.id}
+                  imageUrl={resolveImageUrl(playlist.imageUrl)}
+                  title={playlist.name}
+                  subtitle="Playlist"
                   onClick={() => {
                     registrarRecente({
                       id: playlist.id,
@@ -201,34 +175,36 @@ export default function SearchPanel({ query, onFechar }: SearchProps) {
                     navigate(`/playlist/${playlist.id}`);
                     onFechar();
                   }}
-                >
-                  {playlist.name}
-                </button>
+                />
               ))}
+              {!!searchResults?.musics.length && (
+                <p className="px-2 py-1 text-[12px] font-bold">Músicas</p>
+              )}
               {searchResults?.musics.map((musica) => (
-                <button
+                <SearchResultRow
                   key={musica.id}
-                  onClick={async () => {
-                    const album = await getAlbumById(musica.albumId);
+                  imageUrl={resolveImageUrl(musica.albumImageUrl)}
+                  title={musica.title}
+                  subtitle={`Música • ${musica.artistName}`}
+                  showPlayIcon
+                  onClick={() => {
                     const faixaFila: FaixaFila = {
-                      musica: musica,
-                      capa: album.imageUrl,
-                      nomeArtista: album.artistName,
+                      musica,
+                      capa: musica.albumImageUrl,
+                      nomeArtista: musica.artistName,
                     };
                     tocarFaixa([faixaFila], musica.id);
                     registrarRecente({
                       id: musica.id,
                       type: "music",
                       label: musica.title,
-                      subtitle: `Música • ${album.artistName}`,
-                      imageUrl: album.imageUrl,
+                      subtitle: `Música • ${musica.artistName}`,
+                      imageUrl: musica.albumImageUrl,
                       albumId: musica.albumId,
                     });
                     onFechar();
                   }}
-                >
-                  {musica.title}
-                </button>
+                />
               ))}
             </div>
           )}

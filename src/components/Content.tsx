@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { resolveImageUrl } from "../api/client";
 import EstadoPagina from "./EstadoPagina";
+import { CardAlbum, CardArtista, CardPlaylist } from "./Cards";
 import {
   getUserPlaylists,
   getUserRecentAlbums,
@@ -12,8 +13,6 @@ import type { AlbumNoMusics, Artist, PlaylistNoMusic } from "../api/types";
 import type {
   BotaoFiltroProps,
   CardAcessoRapidoProps,
-  CardArtistaProps,
-  CardPlaylistProps,
   FiltroMain,
 } from "../types";
 
@@ -57,74 +56,6 @@ const CardAcessoRapido = ({
       </div>
     )}
     <p className="flex-1 truncate px-2 text-xs font-bold">{titulo}</p>
-  </Link>
-);
-
-const CardPlaylist = ({ id, capa, titulo, artista }: CardPlaylistProps) => (
-  <Link
-    to={`/playlist/${id}`}
-    className="flex w-19 shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:w-37.5"
-  >
-    {capa ? (
-      <img
-        src={capa}
-        alt={titulo}
-        className="h-15 w-15 rounded-sm object-cover shadow-md md:aspect-square md:h-auto md:w-full"
-      />
-    ) : (
-      <div
-        className="h-15 w-15 rounded-sm bg-[#2a2a2a] shadow-md md:aspect-square md:h-auto md:w-full"
-        aria-hidden="true"
-      />
-    )}
-    <p className="truncate text-[10px] font-bold">{titulo}</p>
-    <p className="truncate text-[9px] text-[#B3B3B3]">Playlist • {artista}</p>
-  </Link>
-);
-
-const CardAlbum = ({ id, capa, titulo, artista }: CardPlaylistProps) => (
-  <Link
-    to={`/album/${id}`}
-    className="flex w-19 shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:w-37.5"
-  >
-    {capa ? (
-      <img
-        src={capa}
-        alt={titulo}
-        className="h-15 w-15 rounded-sm object-cover shadow-md md:aspect-square md:h-auto md:w-full"
-      />
-    ) : (
-      <div
-        className="h-15 w-15 rounded-sm bg-[#2a2a2a] shadow-md md:aspect-square md:h-auto md:w-full"
-        aria-hidden="true"
-      />
-    )}
-    <p className="truncate text-[10px] font-bold">{titulo}</p>
-    <p className="truncate text-[9px] text-[#B3B3B3]">Álbum • {artista}</p>
-  </Link>
-);
-
-const CardArtista = ({ id, capa, nome }: CardArtistaProps) => (
-  <Link
-    to={`/artist/${id}`}
-    className="flex min-h-26 shrink-0 cursor-pointer flex-col gap-1.5 rounded-sm p-1.5 text-inherit no-underline hover:bg-[#2a2a2a] md:min-h-43"
-  >
-    {capa ? (
-      <img
-        src={capa}
-        alt={nome}
-        className="h-15 w-15 rounded-full object-cover shadow-md md:h-33 md:w-33"
-      />
-    ) : (
-      <div
-        className="flex h-15 w-15 items-center justify-center rounded-full bg-[#2a2a2a] text-sm font-bold shadow-md md:h-33 md:w-33"
-        aria-hidden="true"
-      >
-        {nome.charAt(0).toUpperCase()}
-      </div>
-    )}
-    <p className="truncate text-[10px] font-bold">{nome}</p>
-    <p className="text-[9px] text-[#B3B3B3]">Artista</p>
   </Link>
 );
 

@@ -28,7 +28,6 @@ import { formatarNumero as formatarOuvintes } from "../utils/formatarNumero";
 type ArtistSongRow = {
   musica: Music;
   index: number;
-  capaMusica: string | null;
   aoTocar: () => void;
   aoAbrirMenu: (e: React.MouseEvent) => void;
   aoAdicionarCurtida: () => void;
@@ -37,12 +36,12 @@ type ArtistSongRow = {
 const ArtistSong = ({
   musica,
   index,
-  capaMusica,
   aoTocar,
   aoAbrirMenu,
   aoAdicionarCurtida,
 }: ArtistSongRow) => {
   const { ref } = useDraggable({ id: musica.id, type: "song" });
+  const capaMusica = resolveImageUrl(musica.albumImageUrl);
 
   return (
     <div
@@ -169,18 +168,11 @@ export default function ArtistPage() {
     );
   if (!artista) return <EstadoPagina>Artista não encontrado.</EstadoPagina>;
 
-  const capaPorMusica = new Map<string, string | null>();
-  albuns.forEach((album) => {
-    album.musics.forEach((musica) =>
-      capaPorMusica.set(musica.id, album.imageUrl),
-    );
-  });
-
   const capaArtista = resolveImageUrl(artista.imageUrl);
 
   const filaPopulares: FaixaFila[] = musicasPopulares.map((musica) => ({
     musica,
-    capa: capaPorMusica.get(musica.id) ?? null,
+    capa: musica.albumImageUrl,
     nomeArtista: artista.name,
   }));
 
@@ -248,7 +240,6 @@ export default function ArtistPage() {
               key={musica.id}
               musica={musica}
               index={index}
-              capaMusica={resolveImageUrl(capaPorMusica.get(musica.id) ?? null)}
               aoTocar={() => tocarFaixa(filaPopulares, musica.id)}
               aoAbrirMenu={(e) =>
                 setMenuFaixa({ musica, x: e.clientX, y: e.clientY })

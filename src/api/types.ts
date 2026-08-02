@@ -10,6 +10,8 @@ export type Music = {
   explicit: boolean;
   createdAt: string;
   updatedAt: string | null;
+  artistName: string;
+  albumImageUrl: string | null;
 };
 
 export type Artist = {

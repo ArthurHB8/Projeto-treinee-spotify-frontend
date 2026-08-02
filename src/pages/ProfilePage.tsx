@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { getAlbumById } from "../api/album";
 import { resolveImageUrl } from "../api/client";
 import {
   getUserFollowers,
@@ -16,7 +15,7 @@ import MenuFaixa from "../components/MenuFaixa";
 import profilePicture from "../assets/profilePicture.png";
 import explicitIcon from "../assets/icons/explicitIcon.svg";
 
-import type { Album, Artist, Music, PlaylistNoMusic } from "../api/types";
+import type { Artist, Music, PlaylistNoMusic } from "../api/types";
 import type { FaixaFila } from "../types";
 import { formatarDuracao } from "../utils/formatarDuracao";
 import { formatarNumero as formatarReproducoes } from "../utils/formatarNumero";
@@ -30,7 +29,6 @@ export default function ProfilePage() {
   const [musicas, setMusicas] = useState<Music[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistNoMusic[]>([]);
   const [seguidores, setSeguidores] = useState<string[]>([]);
-  const [albunsPorId, setAlbunsPorId] = useState<Map<string, Album>>(new Map());
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
   const [menuFaixa, setMenuFaixa] = useState<{
@@ -56,18 +54,6 @@ export default function ProfilePage() {
       setMusicas(musicasResp);
       setPlaylists(playlistsResp);
       setSeguidores(seguidoresResp);
-
-      const albumIds = [
-        ...new Set(
-          musicasResp
-            .map((musica) => musica.albumId)
-            .filter((albumId): albumId is string => Boolean(albumId)),
-        ),
-      ];
-      const albunsResp = await Promise.all(
-        albumIds.map((albumId) => getAlbumById(albumId)),
-      );
-      setAlbunsPorId(new Map(albunsResp.map((album) => [album.id, album])));
     };
 
     carregar()
@@ -85,8 +71,8 @@ export default function ProfilePage() {
 
   const filaMusicas: FaixaFila[] = musicas.map((musica) => ({
     musica,
-    capa: albunsPorId.get(musica.albumId)?.imageUrl ?? null,
-    nomeArtista: artistas.find((a) => a.id === musica.artistId)?.name ?? "",
+    capa: musica.albumImageUrl,
+    nomeArtista: musica.artistName,
   }));
 
   return (
@@ -154,9 +140,7 @@ export default function ProfilePage() {
         </p>
         <div className="flex flex-col">
           {musicas.map((musica, index) => {
-            const capa = resolveImageUrl(
-              albunsPorId.get(musica.albumId)?.imageUrl ?? null,
-            );
+            const capa = resolveImageUrl(musica.albumImageUrl);
 
             return (
               <div
