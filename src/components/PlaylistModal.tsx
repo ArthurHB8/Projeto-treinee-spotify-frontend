@@ -119,23 +119,28 @@ export default function PlaylistModal({
         </h2>
 
         <div className="mb-3 flex gap-4">
-          <label
-            htmlFor="imagem-playlist"
-            className="flex h-24 w-24 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-[#3a3a3a] text-2xl font-bold"
-            title="Escolher foto"
-          >
-            {preview ? (
-              <img
-                src={preview}
-                alt=""
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <span aria-hidden="true">
-                {nome.trim().charAt(0).toUpperCase() || "+"}
-              </span>
-            )}
-          </label>
+          <div className="flex w-24 shrink-0 flex-col items-center gap-1">
+            <label
+              htmlFor="imagem-playlist"
+              className="flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-[#3a3a3a] text-2xl font-bold"
+              title="Escolher foto"
+            >
+              {preview ? (
+                <img
+                  src={preview}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span aria-hidden="true">
+                  {nome.trim().charAt(0).toUpperCase() || "+"}
+                </span>
+              )}
+            </label>
+            <p className="text-texto-secundario text-center text-[9px]">
+              Tamanho máximo: 20MB
+            </p>
+          </div>
           <input
             id="imagem-playlist"
             type="file"

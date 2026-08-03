@@ -154,7 +154,7 @@ export default function AlbumPage() {
             aria-hidden="true"
           />
         )}
-        <div className="min-w-0">
+        <div className="w-full min-w-0 xl:w-auto">
           <p className="text-xs font-bold">Álbum</p>
           <h1 className="my-2 truncate text-[28px] leading-none font-bold xl:text-[64px]">
             {album.title}

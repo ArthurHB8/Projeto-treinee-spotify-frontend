@@ -164,6 +164,14 @@ export default function Library() {
 
       {!carregando && !erro && (
         <div className="mt-3 flex flex-col items-center gap-2 md:items-stretch">
+          <button
+            onClick={() => setCriandoPlaylist(true)}
+            aria-label="Criar playlist"
+            title="Criar playlist"
+            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded bg-[#2a2a2a] text-lg font-bold text-white hover:bg-[#3a3a3a] md:hidden"
+          >
+            +
+          </button>
           {itensFiltrados.map((item) => (
             <LibraryItem
               key={item.id}
