@@ -1,7 +1,10 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export function resolveImageUrl(imageUrl: string | null): string | null {
-  return imageUrl ? `${BASE_URL}${imageUrl}` : null;
+  if (!imageUrl) return null;
+  // URLs absolutas (ex: R2/CDN) já vêm prontas do backend; caminhos relativos (ex: /images/...
+  // servidos pelo próprio backend) ainda precisam do prefixo da API.
+  return /^https?:\/\//.test(imageUrl) ? imageUrl : `${BASE_URL}${imageUrl}`;
 }
 
 export class ApiError extends Error {
