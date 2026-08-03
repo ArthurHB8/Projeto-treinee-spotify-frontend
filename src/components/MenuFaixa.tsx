@@ -92,6 +92,17 @@ export default function MenuFaixa({
     });
   };
 
+  const removerDaBiblioteca = () => {
+    Promise.all(
+      musica.playlistsId.map((playlistId) =>
+        removeMusicFromPlaylist(playlistId, musica.id),
+      ),
+    ).then(() => {
+      onFaixaRemovida?.();
+      onFechar();
+    });
+  };
+
   const salvarEmMusicasCurtidas = () => {
     getUserPlaylists().then((playlistsNomes) => {
       const playlistCurtidas = playlistsNomes.find(
@@ -165,7 +176,7 @@ export default function MenuFaixa({
           </button>
 
           {musica.playlistsId.length > 0 && (
-            <button className={itemClasse}>
+            <button className={itemClasse} onClick={removerDaBiblioteca}>
               <img src={alreadyLibraryIcon} alt="" className="h-4 w-4" />
               Remover da sua biblioteca
             </button>

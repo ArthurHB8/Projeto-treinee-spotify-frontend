@@ -7,6 +7,7 @@ import {
   setPlaylistImage,
 } from "../api/playlist";
 import { resolveImageUrl } from "../api/client";
+import ConfirmarExclusaoModal from "./ConfirmarExclusaoModal";
 import type { Playlist, PlaylistNoMusic } from "../api/types";
 
 type PlaylistModalProps = {
@@ -32,6 +33,7 @@ export default function PlaylistModal({
   );
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [confirmandoExclusao, setConfirmandoExclusao] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -187,7 +189,7 @@ export default function PlaylistModal({
           {editando ? (
             <button
               className="cursor-pointer text-xs font-bold text-red-400 hover:text-red-300"
-              onClick={excluir}
+              onClick={() => setConfirmandoExclusao(true)}
               disabled={enviando}
             >
               Excluir playlist
@@ -213,6 +215,23 @@ export default function PlaylistModal({
           </div>
         </div>
       </div>
+
+      {confirmandoExclusao && playlist && (
+        <ConfirmarExclusaoModal
+          titulo="Apagar da sua biblioteca?"
+          mensagem={
+            <>
+              A playlist <strong className="font-bold">{playlist.name}</strong>{" "}
+              será excluída da sua biblioteca.
+            </>
+          }
+          aoCancelar={() => setConfirmandoExclusao(false)}
+          aoConfirmar={() => {
+            setConfirmandoExclusao(false);
+            excluir();
+          }}
+        />
+      )}
     </div>
   );
 }
