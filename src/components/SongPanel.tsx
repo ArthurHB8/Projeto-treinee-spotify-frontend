@@ -40,7 +40,7 @@ export default function SongPanel() {
 
       {faixaAtual && <Creditos artistId={faixaAtual.musica.artistId} />}
 
-      <Turne />
+      <Turne nomeArtista={artista} />
 
       <ASeguir />
     </div>

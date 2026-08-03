@@ -1,13 +1,17 @@
 import type { EventoTurne } from "../types";
 
-export default function Turne() {
+type TurneProps = {
+  nomeArtista: string;
+};
+
+export default function Turne({ nomeArtista }: TurneProps) {
   const eventosMock: EventoTurne[] = [
     {
       id: 1,
       mes: "Mai.",
       dia: "24",
       cidade: "Los Angeles",
-      artistas: "LNGSHOT, P1Harmony e Jay Park",
+      artistas: nomeArtista,
       detalhes: "dom., 18:00 • Peacock Theather",
       url: "https://ingressos.com/1",
     },
@@ -16,7 +20,7 @@ export default function Turne() {
       mes: "Jun.",
       dia: "10",
       cidade: "Nova York",
-      artistas: "LNGSHOT, TXT",
+      artistas: nomeArtista,
       detalhes: "sex., 20:00 • Madison Square Garden",
       url: "https://ingressos.com/2",
     },
@@ -25,7 +29,7 @@ export default function Turne() {
       mes: "Jul.",
       dia: "05",
       cidade: "Chicago",
-      artistas: "LNGSHOT Solo",
+      artistas: nomeArtista,
       detalhes: "sáb., 19:00 • United Center",
       url: "https://ingressos.com/3",
     },
@@ -34,7 +38,7 @@ export default function Turne() {
       mes: "Ago.",
       dia: "12",
       cidade: "Miami",
-      artistas: "LNGSHOT, ATEEZ",
+      artistas: nomeArtista,
       detalhes: "qui., 21:00 • Kaseya Center",
       url: "https://ingressos.com/4",
     },
