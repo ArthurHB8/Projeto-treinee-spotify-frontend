@@ -37,7 +37,7 @@ export default function PlayerBar() {
   return (
     <>
       {/* Desktop */}
-      <div className="hidden h-18 w-full items-center justify-between bg-black px-4 text-white md:flex">
+      <div className="hidden h-18 w-full shrink-0 items-center justify-between bg-black px-4 text-white md:flex">
         <div className="flex w-[30%] min-w-0 items-center gap-3">
           {faixaAtual && (
             <>
@@ -137,7 +137,7 @@ export default function PlayerBar() {
       {/* Mobile compact mini player, */}
       {!mobileNowPlayingAberto && faixaAtual && (
         <div
-          className="bg-fundo-cards flex h-14 cursor-pointer items-center justify-between gap-3 px-3 text-white md:hidden"
+          className="bg-fundo-cards flex h-14 w-full shrink-0 cursor-pointer items-center justify-between gap-3 px-3 text-white md:hidden"
           onClick={abrirNowPlayingMobile}
           role="button"
           aria-label="Abrir player"
@@ -188,7 +188,7 @@ export default function PlayerBar() {
 
       {/* Mobile expanded now-playing */}
       {mobileNowPlayingAberto && faixaAtual && (
-        <div className="z-50 flex h-32 flex-col justify-between bg-black px-4 py-3 text-white md:hidden">
+        <div className="z-50 flex h-32 w-full shrink-0 flex-col justify-between bg-black px-4 py-3 text-white md:hidden">
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             <div className="min-w-0">
               <p className="truncate text-sm font-medium">

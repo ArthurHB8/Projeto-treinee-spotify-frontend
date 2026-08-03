@@ -12,7 +12,7 @@ export default function App() {
     <NotificacaoProvider>
       <BibliotecaProvider>
         <PlayerProvider>
-          <div className="flex h-screen w-screen flex-col overflow-hidden bg-black">
+          <div className="flex h-dvh w-screen flex-col overflow-hidden bg-black">
             <NavBar />
             <div className="min-h-0 flex-1">
               <Main />

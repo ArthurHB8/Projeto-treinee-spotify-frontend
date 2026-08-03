@@ -34,7 +34,7 @@ export default function NavBar() {
   }, [setPainelAberto]);
 
   return (
-    <div className="text-texto-secundario flex h-15 w-full items-center justify-between bg-black p-3">
+    <div className="text-texto-secundario flex h-15 w-full shrink-0 items-center justify-between bg-black p-3">
       <div className="hidden md:block">
         <img src={spotifyLogo} alt="Spotify Logo" />
       </div>

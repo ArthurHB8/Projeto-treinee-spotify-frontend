@@ -11,11 +11,20 @@ import PlaylistPage from "../pages/PlaylistPage";
 import ProfilePage from "../pages/ProfilePage";
 import SearchPage from "../pages/SearchPage";
 
-const distancia = [
+// No toque, um limiar de distância dispara o drag com o menor deslize do dedo,
+// o que sequestra o scroll normal da lista. um toque-e-segure (delay)
+// só para touch; mouse/caneta mantêm o limiar de distância, mais responsivo.
+const sensores = [
   PointerSensor.configure({
-    activationConstraints: [
-      new PointerActivationConstraints.Distance({ value: 8 }),
-    ],
+    activationConstraints(event) {
+      if (event.pointerType === "touch") {
+        return [
+          new PointerActivationConstraints.Delay({ value: 200, tolerance: 8 }),
+        ];
+      }
+
+      return [new PointerActivationConstraints.Distance({ value: 8 })];
+    },
   }),
 ];
 
@@ -24,7 +33,7 @@ export default function Main() {
   const isSearchPage = location.pathname === "/search";
 
   return (
-    <DragDropProvider sensors={distancia}>
+    <DragDropProvider sensors={sensores}>
       <div className="flex h-full min-h-0 w-full gap-2 bg-black px-1">
         <div className={isSearchPage ? "hidden md:block" : undefined}>
           <Library />
