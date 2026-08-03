@@ -191,12 +191,20 @@ export default function PlayerBar() {
         <div className="z-50 flex h-32 w-full shrink-0 flex-col justify-between bg-black px-4 py-3 text-white md:hidden">
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">
+              <Link
+                to={`/album/${faixaAtual.musica.albumId}`}
+                onClick={fecharNowPlayingMobile}
+                className="block truncate text-sm font-medium text-inherit no-underline hover:underline"
+              >
                 {faixaAtual.musica.title}
-              </p>
-              <p className="text-texto-secundario truncate text-xs">
+              </Link>
+              <Link
+                to={`/artist/${faixaAtual.musica.artistId}`}
+                onClick={fecharNowPlayingMobile}
+                className="text-texto-secundario block truncate text-xs no-underline hover:underline"
+              >
                 {faixaAtual.nomeArtista}
-              </p>
+              </Link>
             </div>
             <div className="flex items-center gap-5">
               <button onClick={faixaAnterior} aria-label="Voltar">
