@@ -14,7 +14,10 @@ import explicitIcon from "../assets/icons/explicitIcon.svg";
 import type { Album, Music } from "../api/types";
 import type { FaixaFila } from "../types";
 import { useAdicionarMusicaPlaylist } from "../hooks/useAdicionarMusicaPlaylist";
-import { formatarDuracao, formatarDuracaoTotal } from "../utils/formatarDuracao";
+import {
+  formatarDuracao,
+  formatarDuracaoTotal,
+} from "../utils/formatarDuracao";
 import { formatarNumero as formatarReproducoes } from "../utils/formatarNumero";
 
 const IconeMais = () => (
@@ -135,7 +138,10 @@ export default function AlbumPage() {
     if (faixaAtualEDesteAlbum) {
       alternarPlayPause();
     } else if (album.musics[0]) {
-      tocarFaixa(filaAlbum, album.musics[0].id);
+      tocarFaixa(filaAlbum, album.musics[0].id, {
+        tipo: "Álbum",
+        id: album.id,
+      });
     }
   };
 
@@ -206,7 +212,12 @@ export default function AlbumPage() {
             key={musica.id}
             musica={musica}
             index={index}
-            aoTocar={() => tocarFaixa(filaAlbum, musica.id)}
+            aoTocar={() =>
+              tocarFaixa(filaAlbum, musica.id, {
+                tipo: "Álbum",
+                id: album.id,
+              })
+            }
             aoAbrirMenu={(e) =>
               setMenuFaixa({ musica, x: e.clientX, y: e.clientY })
             }

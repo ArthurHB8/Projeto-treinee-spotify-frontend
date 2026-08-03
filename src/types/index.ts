@@ -20,6 +20,7 @@ export type LibraryItemProps = {
   artista: string;
   tipo: LibraryItemTipo;
   imageUrl: string | null;
+  tocando?: boolean;
 };
 
 export type BibliotecaItem = {
@@ -65,7 +66,7 @@ export type EventoTurne = {
   url: string;
 };
 
-export type FiltroMain = "Tudo" | "Música" | "Playlists";
+export type FiltroMain = "Tudo" | "Álbum" | "Playlist";
 
 export type FiltroBiblioteca = "Tudo" | "Playlist" | "Álbum" | "artista";
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { useDragDropMonitor } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
@@ -101,12 +101,22 @@ const PlaylistRow = ({
         )}
         <div className="flex min-w-0 flex-col gap-1">
           <p className="truncate font-medium">{musica.title}</p>
-          <p className="text-texto-secundario truncate">{musica.artistName}</p>
+          <Link
+            to={`/artist/${musica.artistId}`}
+            onClick={(e) => e.stopPropagation()}
+            className="text-texto-secundario truncate text-inherit no-underline hover:underline"
+          >
+            {musica.artistName}
+          </Link>
         </div>
       </div>
-      <span className="text-texto-secundario hidden truncate md:block">
+      <Link
+        to={`/album/${musica.albumId}`}
+        onClick={(e) => e.stopPropagation()}
+        className="text-texto-secundario hidden truncate text-inherit no-underline hover:underline md:block"
+      >
         {album?.title}
-      </span>
+      </Link>
       <span className="text-texto-secundario hidden md:block">
         {formatarData(musica.createdAt)}
       </span>
@@ -226,7 +236,10 @@ export default function PlaylistPage() {
     if (faixaAtualEDestaPlaylist) {
       alternarPlayPause();
     } else if (playlist.musics[0]) {
-      tocarFaixa(filaPlaylist, playlist.musics[0].id);
+      tocarFaixa(filaPlaylist, playlist.musics[0].id, {
+        tipo: "Playlist",
+        id: playlist.id,
+      });
     }
   };
 
@@ -238,12 +251,12 @@ export default function PlaylistPage() {
             src={capaPlaylist}
             alt={playlist.name}
             onClick={() => setEditando(true)}
-            className="h-30 w-30 shrink-0 cursor-pointer object-cover transition hover:brightness-75 md:h-[174px] md:w-[174px]"
+            className="h-30 w-30 shrink-0 cursor-pointer object-cover transition hover:brightness-75 md:h-43.5 md:w-43.5"
           />
         ) : (
           <div
             onClick={() => setEditando(true)}
-            className="flex h-[120px] w-[120px] shrink-0 cursor-pointer items-center justify-center bg-[#2a2a2a] text-4xl font-bold transition hover:brightness-75 md:h-[174px] md:w-[174px] md:text-6xl"
+            className="flex h-30 w-30 shrink-0 cursor-pointer items-center justify-center bg-[#2a2a2a] text-4xl font-bold transition hover:brightness-75 md:h-43.5 md:w-43.5 md:text-6xl"
           >
             {playlist.name.charAt(0).toUpperCase()}
           </div>
@@ -267,7 +280,13 @@ export default function PlaylistPage() {
               alt=""
               className="h-4 w-4 rounded-full object-cover"
             />
-            <span className="font-bold">Vitoria Tenorio</span>
+            <Link
+              to={"/profile"}
+              onClick={(e) => e.stopPropagation()}
+              className="font-bold hover:underline"
+            >
+              Vitoria Tenorio
+            </Link>
             <span className="text-texto-secundario">
               • {playlist.musicQtd} músicas,{" "}
               {formatarDuracaoTotal(playlist.duration)} (
@@ -277,46 +296,61 @@ export default function PlaylistPage() {
         </div>
       </div>
 
-      <div className="px-4 py-6 md:px-6">
-        <button
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-[#6FD168] transition-transform"
-          aria-label={tocandoEstaPlaylist ? "Pausar" : "Tocar"}
-          onClick={alternarPlaylist}
-          disabled={playlist.musics.length === 0}
-        >
-          <img
-            src={tocandoEstaPlaylist ? pauseIcon : playIcon}
-            alt=""
-            className="h-[13.5px] w-[11.5px] invert"
-          />
-        </button>
-      </div>
-
-      <div className="px-4 md:px-6">
-        <div className="text-texto-secundario grid grid-cols-[24px_1fr_60px] gap-3 border-b border-[#2a2a2a] px-2 py-2 text-xs md:grid-cols-[24px_1fr_200px_140px_100px]">
-          <span>#</span>
-          <span>Título</span>
-          <span className="hidden md:block">Álbum</span>
-          <span className="hidden md:block">Adicionada em</span>
-          <span className="hidden justify-center md:flex">
-            <img src={clockIcon} alt="Duração" className="h-3.5 w-3.5" />
-          </span>
+      {playlist.musics.length === 0 ? (
+        <div className="px-4 py-6 md:px-6">
+          <p className="text-sm font-bold">Nenhuma música adicionada ainda</p>
+          <p className="text-texto-secundario text-sm">
+            Adicione músicas para começar
+          </p>
         </div>
+      ) : (
+        <>
+          <div className="px-4 py-6 md:px-6">
+            <button
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-[#6FD168] transition-transform"
+              aria-label={tocandoEstaPlaylist ? "Pausar" : "Tocar"}
+              onClick={alternarPlaylist}
+            >
+              <img
+                src={tocandoEstaPlaylist ? pauseIcon : playIcon}
+                alt=""
+                className="h-[13.5px] w-[11.5px] invert"
+              />
+            </button>
+          </div>
 
-        {playlist.musics.map((musica, index) => (
-          <PlaylistRow
-            key={musica.id}
-            musica={musica}
-            index={index}
-            groupId={playlist.id}
-            album={albunsPorId.get(musica.albumId)}
-            aoTocar={() => tocarFaixa(filaPlaylist, musica.id)}
-            aoAbrirMenu={(e) =>
-              setMenuFaixa({ musica, x: e.clientX, y: e.clientY })
-            }
-          />
-        ))}
-      </div>
+          <div className="px-4 md:px-6">
+            <div className="text-texto-secundario grid grid-cols-[24px_1fr_60px] gap-3 border-b border-[#2a2a2a] px-2 py-2 text-xs md:grid-cols-[24px_1fr_200px_140px_100px]">
+              <span>#</span>
+              <span>Título</span>
+              <span className="hidden md:block">Álbum</span>
+              <span className="hidden md:block">Adicionada em</span>
+              <span className="hidden justify-center md:flex">
+                <img src={clockIcon} alt="Duração" className="h-3.5 w-3.5" />
+              </span>
+            </div>
+
+            {playlist.musics.map((musica, index) => (
+              <PlaylistRow
+                key={musica.id}
+                musica={musica}
+                index={index}
+                groupId={playlist.id}
+                album={albunsPorId.get(musica.albumId)}
+                aoTocar={() =>
+                  tocarFaixa(filaPlaylist, musica.id, {
+                    tipo: "Playlist",
+                    id: playlist.id,
+                  })
+                }
+                aoAbrirMenu={(e) =>
+                  setMenuFaixa({ musica, x: e.clientX, y: e.clientY })
+                }
+              />
+            ))}
+          </div>
+        </>
+      )}
 
       {menuFaixa && (
         <MenuFaixa

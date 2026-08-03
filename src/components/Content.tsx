@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { resolveImageUrl } from "../api/client";
+import { usePlayer } from "../context/PlayerContext";
 import EstadoPagina from "./EstadoPagina";
+import IndicadorTocando from "./IndicadorTocando";
 import { CardAlbum, CardArtista, CardPlaylist } from "./Cards";
 import {
   getUserPlaylists,
   getUserRecentAlbums,
   getUserRecentArtists,
 } from "../api/user";
+import { itemEstaTocando } from "../utils/itemTocando";
 import type { AlbumNoMusics, Artist, PlaylistNoMusic } from "../api/types";
 import type {
   BotaoFiltroProps,
@@ -36,6 +39,7 @@ const CardAcessoRapido = ({
   tipo,
   capa,
   titulo,
+  tocando,
 }: CardAcessoRapidoProps) => (
   <Link
     to={`${tipo === "Álbum" ? "/album" : "/playlist"}/${id}`}
@@ -56,10 +60,16 @@ const CardAcessoRapido = ({
       </div>
     )}
     <p className="flex-1 truncate px-2 text-xs font-bold">{titulo}</p>
+    {tocando && (
+      <div className="pr-3">
+        <IndicadorTocando />
+      </div>
+    )}
   </Link>
 );
 
 export default function Main() {
+  const { contextoAtual, tocando: musicaTocando } = usePlayer();
   const [filtroAtivo, setFiltroAtivo] = useState<FiltroMain>("Tudo");
 
   const [playlists, setPlaylists] = useState<PlaylistNoMusic[]>([]);
@@ -100,12 +110,19 @@ export default function Main() {
       tipo: "Álbum" as const,
       titulo: album.title,
       capa: resolveImageUrl(album.imageUrl),
+      tocando: itemEstaTocando("Álbum", album.id, contextoAtual, musicaTocando),
     })),
     ...playlists.map((playlist) => ({
       id: playlist.id,
       tipo: "Playlist" as const,
       titulo: playlist.name,
       capa: resolveImageUrl(playlist.imageUrl),
+      tocando: itemEstaTocando(
+        "Playlist",
+        playlist.id,
+        contextoAtual,
+        musicaTocando,
+      ),
     })),
   ].slice(0, 8);
 
@@ -118,63 +135,71 @@ export default function Main() {
           onClick={() => setFiltroAtivo("Tudo")}
         />
         <BotaoFiltro
-          texto="Música"
-          ativo={filtroAtivo === "Música"}
-          onClick={() => setFiltroAtivo("Música")}
+          texto="Álbuns"
+          ativo={filtroAtivo === "Álbum"}
+          onClick={() => setFiltroAtivo("Álbum")}
         />
         <BotaoFiltro
           texto="Playlists"
-          ativo={filtroAtivo === "Playlists"}
-          onClick={() => setFiltroAtivo("Playlists")}
+          ativo={filtroAtivo === "Playlist"}
+          onClick={() => setFiltroAtivo("Playlist")}
         />
       </div>
 
       <div className="mb-6 grid grid-cols-2 gap-2 md:grid-cols-4">
-        {acessoRapido.map((item) => (
-          <CardAcessoRapido
-            key={`${item.tipo}-${item.id}`}
-            id={item.id}
-            tipo={item.tipo}
-            titulo={item.titulo}
-            capa={item.capa}
-          />
-        ))}
+        {acessoRapido
+          .filter((item) => filtroAtivo === "Tudo" || item.tipo === filtroAtivo)
+          .map((item) => (
+            <CardAcessoRapido
+              key={`${item.tipo}-${item.id}`}
+              id={item.id}
+              tipo={item.tipo}
+              titulo={item.titulo}
+              capa={item.capa}
+              tocando={item.tocando}
+            />
+          ))}
       </div>
 
-      <section className="mb-6">
-        <h2 className="mb-3 text-base font-bold">Suas Playlists</h2>
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {playlists.map((playlist) => (
-            <CardPlaylist
-              key={playlist.id}
-              id={playlist.id}
-              capa={resolveImageUrl(playlist.imageUrl)}
-              titulo={playlist.name}
-              artista="Vitoria Tenorio"
-            />
-          ))}
-        </div>
-      </section>
+      {(filtroAtivo === "Tudo" || filtroAtivo === "Playlist") && (
+        <section className="mb-6">
+          <h2 className="mb-3 text-base font-bold">Suas Playlists</h2>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {playlists.map((playlist) => (
+              <CardPlaylist
+                key={playlist.id}
+                id={playlist.id}
+                capa={resolveImageUrl(playlist.imageUrl)}
+                titulo={playlist.name}
+                artista="Vitoria Tenorio"
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
-      <section className="mb-6">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-base font-bold">Artistas recentes</h2>
-          <button className="cursor-pointer text-[10px] text-[#B3B3B3] hover:text-white">
-            Mostrar tudo
-          </button>
-        </div>
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {artistas.map((artista) => (
-            <CardArtista
-              key={artista.id}
-              id={artista.id}
-              capa={resolveImageUrl(artista.imageUrl)}
-              nome={artista.name}
-            />
-          ))}
-        </div>
-      </section>
+      {filtroAtivo === "Tudo" && (
+        <section className="mb-6">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-base font-bold">Artistas recentes</h2>
+            <button className="cursor-pointer text-[10px] text-[#B3B3B3] hover:text-white">
+              Mostrar tudo
+            </button>
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {artistas.map((artista) => (
+              <CardArtista
+                key={artista.id}
+                id={artista.id}
+                capa={resolveImageUrl(artista.imageUrl)}
+                nome={artista.name}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
+      {(filtroAtivo === "Tudo" || filtroAtivo === "Álbum") && (
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-base font-bold">Álbuns recentes</h2>
@@ -194,6 +219,7 @@ export default function Main() {
           ))}
         </div>
       </section>
+      )}
     </div>
   );
 }

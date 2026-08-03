@@ -6,12 +6,14 @@ import searchIcon from "../assets/icons/searchIcon.svg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBiblioteca } from "../context/BibliotecaContext";
+import { usePlayer } from "../context/PlayerContext";
 import {
   getUserPlaylists,
   getUserRecentAlbums,
   getUserRecentArtists,
 } from "../api/user";
 import { ordenarItensBiblioteca } from "../utils/bibliotecaOrdenacao";
+import { itemEstaTocando } from "../utils/itemTocando";
 import type {
   BibliotecaItem,
   BotaoFiltroProps,
@@ -36,6 +38,7 @@ const BotaoFiltro = ({ texto, ativo, onClick }: BotaoFiltroProps) => {
 export default function Library() {
   const navigate = useNavigate();
   const { versaoBiblioteca, invalidarBiblioteca } = useBiblioteca();
+  const { contextoAtual, tocando: musicaTocando } = usePlayer();
 
   const [itens, setItens] = useState<BibliotecaItem[]>([]);
   const [carregando, setCarregando] = useState(true);
@@ -180,6 +183,12 @@ export default function Library() {
               artista={item.artista}
               tipo={item.tipo}
               imageUrl={item.imageUrl}
+              tocando={itemEstaTocando(
+                item.tipo,
+                item.id,
+                contextoAtual,
+                musicaTocando,
+              )}
             />
           ))}
         </div>

@@ -185,7 +185,10 @@ export default function ArtistPage() {
     if (faixaAtualEDesteArtista) {
       alternarPlayPause();
     } else if (musicasPopulares[0]) {
-      tocarFaixa(filaPopulares, musicasPopulares[0].id);
+      tocarFaixa(filaPopulares, musicasPopulares[0].id, {
+        tipo: "artista",
+        id: artista.id,
+      });
     }
   };
 
@@ -240,7 +243,12 @@ export default function ArtistPage() {
               key={musica.id}
               musica={musica}
               index={index}
-              aoTocar={() => tocarFaixa(filaPopulares, musica.id)}
+              aoTocar={() =>
+                tocarFaixa(filaPopulares, musica.id, {
+                  tipo: "artista",
+                  id: artista.id,
+                })
+              }
               aoAbrirMenu={(e) =>
                 setMenuFaixa({ musica, x: e.clientX, y: e.clientY })
               }

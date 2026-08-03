@@ -8,12 +8,22 @@ import {
 
 import type { FaixaFila } from "../types";
 
+export type ContextoReproducao = {
+  tipo: "Playlist" | "Álbum" | "artista";
+  id: string;
+};
+
 type PlayerContextValue = {
   faixaAtual: FaixaFila | null;
   proximaFaixaFila: FaixaFila | null;
   tocando: boolean;
   progresso: number;
-  tocarFaixa: (fila: FaixaFila[], musicaId: string) => void;
+  contextoAtual: ContextoReproducao | null;
+  tocarFaixa: (
+    fila: FaixaFila[],
+    musicaId: string,
+    contexto?: ContextoReproducao,
+  ) => void;
   alternarPlayPause: () => void;
   proximaFaixa: () => void;
   faixaAnterior: () => void;
@@ -31,16 +41,23 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [tocando, setTocando] = useState(false);
   const [progresso, setProgresso] = useState(0);
   const [mobileNowPlayingAberto, setMobileNowPlayingAberto] = useState(false);
+  const [contextoAtual, setContextoAtual] =
+    useState<ContextoReproducao | null>(null);
 
   const faixaAtual = fila[indiceAtual] ?? null;
   const proximaFaixaFila = fila[indiceAtual + 1] ?? null;
 
-  const tocarFaixa = (novaFila: FaixaFila[], musicaId: string) => {
+  const tocarFaixa = (
+    novaFila: FaixaFila[],
+    musicaId: string,
+    contexto?: ContextoReproducao,
+  ) => {
     const indice = novaFila.findIndex((item) => item.musica.id === musicaId);
     setFila(novaFila);
     setIndiceAtual(indice === -1 ? 0 : indice);
     setProgresso(0);
     setTocando(true);
+    setContextoAtual(contexto ?? null);
   };
 
   const abrirNowPlayingMobile = () => {
@@ -98,6 +115,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         proximaFaixaFila,
         tocando,
         progresso,
+        contextoAtual,
         tocarFaixa,
         alternarPlayPause,
         proximaFaixa,

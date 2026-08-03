@@ -57,10 +57,9 @@ export default function SearchPage() {
 
   useEffect(() => {
     if (debouncedMobileQuery === urlQuery) return;
-    setSearchParams(
-      debouncedMobileQuery ? { q: debouncedMobileQuery } : {},
-      { replace: true },
-    );
+    setSearchParams(debouncedMobileQuery ? { q: debouncedMobileQuery } : {}, {
+      replace: true,
+    });
   }, [debouncedMobileQuery, urlQuery, setSearchParams]);
 
   useEffect(() => {

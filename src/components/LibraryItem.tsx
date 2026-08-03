@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useDroppable } from "@dnd-kit/react";
 
 import { resolveImageUrl } from "../api/client";
+import isPlayingLibraryIcon from "../assets/icons/isPlayingLibrary.svg";
 import type { LibraryItemProps } from "../types";
 
 const rotaPorTipo: Record<LibraryItemProps["tipo"], string> = {
@@ -16,6 +17,7 @@ export default function LibraryItem({
   artista,
   tipo,
   imageUrl,
+  tocando,
 }: LibraryItemProps) {
   const arredondado = tipo === "artista" ? "rounded-full" : "rounded-xs";
 
@@ -51,12 +53,23 @@ export default function LibraryItem({
           {titulo.charAt(0).toUpperCase()}
         </div>
       )}
-      <div className="hidden md:block">
-        <p className="text-[10px] font-bold">{titulo}</p>
+      <div className="hidden min-w-0 flex-1 md:block">
+        <p
+          className={`truncate text-[10px] font-bold ${tocando ? "text-[#67C260]" : ""}`}
+        >
+          {titulo}
+        </p>
         <p className="text-[10px] text-[#B3B3B3]">
           {tipo === "artista" ? "Artista" : `${tipo} • ${artista}`}
         </p>
       </div>
+      {tocando && (
+        <img
+          src={isPlayingLibraryIcon}
+          alt="Tocando agora"
+          className="hidden h-3 w-3 shrink-0 md:block"
+        />
+      )}
     </Link>
   );
 }
